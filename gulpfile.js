@@ -1,19 +1,20 @@
-const gulp         = require('gulp')
-const plumber      = require('gulp-plumber')
-const notify       = require('gulp-notify')
-const sass         = require('gulp-sass')
-const minify       = require('gulp-minify')
-const sourcemaps   = require('gulp-sourcemaps')
+const gulp = require('gulp')
+const plumber = require('gulp-plumber')
+const notify = require('gulp-notify')
+const sass = require('gulp-sass')
+const minify = require('gulp-minify')
+const sourcemaps = require('gulp-sourcemaps')
 const autoprefixer = require('gulp-autoprefixer')
-const rename       = require('gulp-rename')
-const imagemin     = require('gulp-imagemin')
-const connect      = require('gulp-connect')
-const babel        = require('gulp-babel')
-const open         = require('gulp-open')
-const ip           = require('ip').address()
+const rename = require('gulp-rename')
+const imagemin = require('gulp-imagemin')
+const connect = require('gulp-connect')
+const babel = require('gulp-babel')
+const open = require('gulp-open')
+const ip = require('ip').address()
+const concat = require('gulp-concat')
 
 let config = {
-    'src' : 'src/',
+    'src': 'src/',
     'dist': 'dist/',
     'ip': ip,
     'port': 8080
@@ -38,9 +39,13 @@ gulp.task('uri', () => {
 
 gulp.task('sass', () => {
     return gulp.src(config.src + 'scss/*.scss')
-        .pipe(plumber({errorHandler: notify.onError('SASS Error: <%= error.message %>')}))
+        .pipe(plumber({
+            errorHandler: notify.onError('SASS Error: <%= error.message %>')
+        }))
         .pipe(sourcemaps.init())
-        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }).on('error', sass.logError))
         .pipe(sourcemaps.write())
         .pipe(autoprefixer({
             browsers: ['last 2 versions'],
@@ -56,17 +61,20 @@ gulp.task('sass', () => {
 
 gulp.task('javascript', () => {
     return gulp.src(config.src + 'js/*.js')
-        .pipe(plumber({errorHandler: notify.onError("JS Error: <%= error.message %>")}))
+        .pipe(concat('app.js'))
+        .pipe(plumber({
+            errorHandler: notify.onError("JS Error: <%= error.message %>")
+        }))
         .pipe(babel({
             presets: ['es2015']
         }))
         .pipe(minify({
-            ext:{
-                src:'.js',
-                min:'.min.js'
-          },
-          ignoreFiles: ['.min.js'],
-          noSource: false
+            ext: {
+                src: '.js',
+                min: '.min.js'
+            },
+            ignoreFiles: ['.min.js'],
+            noSource: false
         }))
         .pipe(gulp.dest(config.dist + 'assets/js'))
         .pipe(connect.reload())

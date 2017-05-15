@@ -1,17 +1,58 @@
 @charset 'UTF-8';
-
 // Tools
 @import 'tools/variables';
-
 // Vendors
 @import 'vendor/responsive';
-
 // Base
 @import 'base/normalize';
 @import 'base/base';
-
 // Components
 @import 'components/buttons';
-
 // Layout
 @import 'layout/header';
+
+
+body{
+    background: #ccc;
+}
+
+.bomberman-map {
+    width: 750px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.bomberman-map .cell {
+    height: 50px;
+    width: 50px;
+    float: left;
+    border: 1px solid black;
+}
+
+.bomberman-map .empty {
+    background-color: white;
+}
+
+.bomberman-map .unbreakable {
+    background-color: black;
+}
+
+.bomberman-map .breakable {
+    background-color: brown;
+}
+
+.player{
+    background: red;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: 1;
+}
+
+.bomb{
+    background: yellow;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: 0;
+}
