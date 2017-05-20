@@ -56,6 +56,7 @@ var map = function (size, breakable_number, items){
         this.container.appendChild(tab);
     }
 
+    console.log(this.general_table_game);
 
 
 
@@ -158,7 +159,7 @@ var map = function (size, breakable_number, items){
 
 
 // SET THE MAP
-var create_map = new map(15,200, 30);
+var create_map = new map(11,200, 30);
 create_map.create_map();
 create_map.unbreakable();
 create_map.isEmpty();
