@@ -60,7 +60,7 @@ gulp.task('sass', () => {
 })
 
 gulp.task('javascript', () => {
-    return gulp.src(config.src + 'js/*.js')
+    return gulp.src(config.src + 'scripts/*.js')
         .pipe(concat('app.js'))
         .pipe(plumber({
             errorHandler: notify.onError("JS Error: <%= error.message %>")
@@ -106,7 +106,7 @@ gulp.task('html', () => {
 gulp.task('watch', () => {
     gulp.watch(config.src + '**/*.html', ['html'])
     gulp.watch(config.src + 'scss/**/*.scss', ['sass'])
-    gulp.watch(config.src + 'js/*.js', ['javascript'])
+    gulp.watch(config.src + 'scripts/*.js', ['javascript'])
     gulp.watch(config.src + 'img/*', ['images'])
     gulp.watch(config.src + 'font/*', ['fonts'])
 })

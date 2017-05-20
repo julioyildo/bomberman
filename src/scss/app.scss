@@ -23,8 +23,8 @@ body{
 }
 
 .bomberman-map .cell {
-    height: 50px;
-    width: 50px;
+    height: 60px;
+    width: 60px;
     float: left;
     border: 1px solid black;
 }
@@ -41,18 +41,22 @@ body{
     background-color: brown;
 }
 
+.bomberman-map .item {
+    background-color: red;
+}
+
 .player{
-    background: red;
-    width: 50px;
-    height: 50px;
+    background: blue;
+    width: 60px;
+    height: 60px;
     position: absolute;
     z-index: 1;
 }
 
 .bomb{
     background: yellow;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     position: absolute;
     z-index: 0;
 }
