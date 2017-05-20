@@ -10,50 +10,48 @@
 @import 'components/buttons';
 // Layout
 @import 'layout/header';
-
-
-body{
+body {
     background: #ccc;
 }
 
-.bomberman-map {
+.bomberman-map .table {
     width: 750px;
     margin: 0 auto;
     position: relative;
 }
 
-.bomberman-map .cell {
+.bomberman-map .table .cell {
     height: 60px;
     width: 60px;
     float: left;
     border: 1px solid black;
 }
 
-.bomberman-map .empty {
+.bomberman-map .table .empty {
     background-color: white;
 }
 
-.bomberman-map .unbreakable {
+.bomberman-map .table .unbreakable {
     background-color: black;
 }
 
-.bomberman-map .breakable {
+.bomberman-map .table .breakable {
     background-color: brown;
 }
 
-.bomberman-map .item {
+.bomberman-map .table .item {
     background-color: red;
 }
 
-.player{
+.bomberman-map .table .player {
     background: blue;
     width: 60px;
     height: 60px;
-    // position: absolute;
-    // z-index: 1;
+    position: absolute;
+    z-index: 1;
 }
 
-.bomb{
+.bomberman-map .table .bomb {
     background: yellow;
     width: 60px;
     height: 60px;

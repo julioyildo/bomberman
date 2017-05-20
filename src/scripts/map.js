@@ -20,7 +20,7 @@ var map = function (size, breakable_number, items){
     this.create_map = function()
     {
         // create the table
-        var tab = document.createElement('table');
+        var tab = document.createElement('div');
         tab.className = 'table';
 
 
@@ -29,14 +29,14 @@ var map = function (size, breakable_number, items){
             this.general_table_game.push([]);
 
             // create each rows
-            var row = document.createElement('tr');
+            var row = document.createElement('div');
             row.className = 'row';
 
 
 
             for (let j = 0; j < this.table_size ; j++)
             {
-                var cell = document.createElement('td');
+                var cell = document.createElement('div');
                 cell.className = 'cell';
                 row.appendChild(cell);
 
@@ -71,7 +71,7 @@ var map = function (size, breakable_number, items){
 
             for (let j = 1; j < this.general_table_game[i].length-1; j+=2)
             {
-                this.general_table_game[i][j].breakable = true;
+                this.general_table_game[i][j].breakable = false;
                 this.general_table_game[i][j].element.classList.add('unbreakable');
 
             }
