@@ -2,16 +2,16 @@
 // CLASS SET THE MAP
 var map = function (size, breakable_number, items){
     //PROPRIETIES :
-    this.container = document.querySelector(".bomberman-map");
-    this.table_size = size;
-    this.breakable_bumber = breakable_number;
-    this.items = items;
+    this.container          = document.querySelector(".bomberman-map");
+    this.table_size         = size;
+    this.breakable_bumber   = breakable_number;
+    this.items              = items;
 
 
     // TABLE :
     this.general_table_game = [];
-    this.is_empty = [];
-    this.is_breakable = [];
+    this.is_empty           = [];
+    this.is_breakable       = [];
 
 
 
@@ -31,8 +31,6 @@ var map = function (size, breakable_number, items){
             // create each rows
             var row = document.createElement('div');
             row.className = 'row';
-
-
 
             for (let j = 0; j < this.table_size ; j++)
             {
@@ -130,7 +128,6 @@ var map = function (size, breakable_number, items){
         }
         // console.log(this.is_breakable );
     }
-
 
 
 

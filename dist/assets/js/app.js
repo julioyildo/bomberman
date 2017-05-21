@@ -136,6 +136,7 @@ var player = function player(player_posX, player_posY, player_number, bomb_power
             } else if (e.keyCode == 40) {
                 if (that.playerPosX + 1 < create_map.general_table_game.length && create_map.general_table_game[that.playerPosX + 1][that.playerPosY].breakable == null) that.playerPosX += 1;
             }
+
             that.player_element.style.top = create_map.general_table_game[that.playerPosX][that.playerPosY].element.offsetTop + "px";
             that.player_element.style.left = create_map.general_table_game[that.playerPosX][that.playerPosY].element.offsetLeft + "px";
         });
@@ -160,17 +161,20 @@ var player = function player(player_posX, player_posY, player_number, bomb_power
                             create_map.general_table_game[this.bomb_PosX + i][this.bomb_PosY].element.classList.remove("breakable");
                             console.log("casser en bas");
                         }
+
                         if (this.bomb_PosX - i >= 0 && create_map.general_table_game[this.bomb_PosX - i][this.bomb_PosY].breakable) {
                             create_map.general_table_game[this.bomb_PosX - i][this.bomb_PosY].breakable = null;
                             create_map.general_table_game[this.bomb_PosX - i][this.bomb_PosY].element.classList.remove("breakable");
                             console.log("casser en haut");
                         }
+
                         if (this.bomb_PosY + i < create_map.general_table_game.length && create_map.general_table_game[this.bomb_PosX][this.bomb_PosY + i].breakable) {
 
                             create_map.general_table_game[this.bomb_PosX][this.bomb_PosY + i].breakable = null;
                             create_map.general_table_game[this.bomb_PosX][this.bomb_PosY + i].element.classList.remove("breakable");
                             console.log("casser à droite");
                         }
+
                         if (this.bomb_PosY - i >= 0 && create_map.general_table_game[this.bomb_PosX][this.bomb_PosY - i].breakable) {
                             create_map.general_table_game[this.bomb_PosX][this.bomb_PosY - i].breakable = null;
                             create_map.general_table_game[this.bomb_PosX][this.bomb_PosY - i].element.classList.remove("breakable");

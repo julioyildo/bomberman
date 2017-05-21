@@ -10,9 +10,13 @@ body {
     flex-direction: column;
     width: 400px;
 }
+.table {
+    border: 50px solid pink;
+}
 
 .row {
     display: flex;
+    margin: 0;
 }
 
 .case {
