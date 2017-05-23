@@ -43,6 +43,16 @@ body {
     background-color: red;
 }
 
+.bomberman-map .table .bombe_plus_one{
+    background-color: grey;
+}
+.bomberman-map .table .bombe_area_bonus{
+    background-color: yellow;
+}
+.bomberman-map .table .walk_fast{
+    background-color: green;
+}
+
 .bomberman-map .table .player {
     background: blue;
     width: 60px;
