@@ -158,10 +158,15 @@ create_map.element();
 create_map.element_value();
 
 // CLASS SET THE PLAYER
-var player = function player(player_posX, player_posY, player_number, bomb_power) {
-    this.playerPosX = player_posX;
-    this.playerPosY = player_posY;
+var player = function player(player_number, bomb_power) {
     this.player_number = player_number;
+    this.players_positions = [{
+        x: 0,
+        y: 0
+    }, {
+        x: create_map.general_table_game.length - 1,
+        y: create_map.general_table_game.length - 1
+    }];
     this.bomb_power = bomb_power;
     this.bombs = [];
     //Pour faire affancer le player, il faut vérifier grâce au tableau générale si les celluls de la
@@ -173,8 +178,17 @@ var player = function player(player_posX, player_posY, player_number, bomb_power
             this.player_element = document.createElement("div");
             this.player_element.classList.add("player");
             document.querySelector(".table").appendChild(this.player_element);
-            this.player_element.style.top = create_map.general_table_game[this.playerPosX][this.playerPosY].element.offsetTop + "px";
-            this.player_element.style.left = create_map.general_table_game[this.playerPosX][this.playerPosY].element.offsetLeft + "px";
+            this.player_element.style.top = create_map.general_table_game[this.players_positions[i].x][this.players_positions[i].y].element.offsetTop + "px";
+            this.player_element.style.left = create_map.general_table_game[this.players_positions[i].x][this.players_positions[i].y].element.offsetLeft + "px";
+            if (i == 0) {
+                this.real_player = this.player_element;
+                this.playerPosX = this.players_positions[0].x;
+                this.playerPosY = this.players_positions[0].y;
+            } else {
+                this.bot_player = this.player_element;
+                this.botPosX = this.players_positions[i].x;
+                this.botPosY = this.players_positions[i].y;
+            }
         }
     }, this.movePlayer = function () {
         var that = this;
@@ -226,8 +240,8 @@ var player = function player(player_posX, player_posY, player_number, bomb_power
                 }
             }
 
-            that.player_element.style.top = create_map.general_table_game[that.playerPosX][that.playerPosY].element.offsetTop + "px";
-            that.player_element.style.left = create_map.general_table_game[that.playerPosX][that.playerPosY].element.offsetLeft + "px";
+            that.real_player.style.top = create_map.general_table_game[that.playerPosX][that.playerPosY].element.offsetTop + "px";
+            that.real_player.style.left = create_map.general_table_game[that.playerPosX][that.playerPosY].element.offsetLeft + "px";
         });
     }, this.putBomb = function () {
         var that = this;
@@ -254,43 +268,83 @@ var player = function player(player_posX, player_posY, player_number, bomb_power
                         if (this.bomb_PosX + i < create_map.general_table_game.length && create_map.general_table_game[this.bomb_PosX + i][this.bomb_PosY].breakable) {
                             create_map.general_table_game[this.bomb_PosX + i][this.bomb_PosY].breakable = null;
                             create_map.general_table_game[this.bomb_PosX + i][this.bomb_PosY].element.classList.remove("breakable");
-                            console.log("casser en bas");
-                            create_map.general_table_game[this.bomb_PosX + i][this.bomb_PosY].element.style.backgroundColor = "green";
+                            create_map.general_table_game[this.bomb_PosX + i][this.bomb_PosY].element.style.backgroundColor = "pink";
                         }
 
                         if (this.bomb_PosX - i >= 0 && create_map.general_table_game[this.bomb_PosX - i][this.bomb_PosY].breakable) {
                             create_map.general_table_game[this.bomb_PosX - i][this.bomb_PosY].breakable = null;
                             create_map.general_table_game[this.bomb_PosX - i][this.bomb_PosY].element.classList.remove("breakable");
-                            console.log("casser en haut");
-                            create_map.general_table_game[this.bomb_PosX - i][this.bomb_PosY].element.style.backgroundColor = "green";
+                            create_map.general_table_game[this.bomb_PosX - i][this.bomb_PosY].element.style.backgroundColor = "pink";
                         }
 
                         if (this.bomb_PosY + i < create_map.general_table_game.length && create_map.general_table_game[this.bomb_PosX][this.bomb_PosY + i].breakable) {
 
                             create_map.general_table_game[this.bomb_PosX][this.bomb_PosY + i].breakable = null;
                             create_map.general_table_game[this.bomb_PosX][this.bomb_PosY + i].element.classList.remove("breakable");
-                            console.log("casser à droite");
-                            create_map.general_table_game[this.bomb_PosX][this.bomb_PosY + i].element.style.backgroundColor = "green";
+                            create_map.general_table_game[this.bomb_PosX][this.bomb_PosY + i].element.style.backgroundColor = "pink";
                         }
 
                         if (this.bomb_PosY - i >= 0 && create_map.general_table_game[this.bomb_PosX][this.bomb_PosY - i].breakable) {
                             create_map.general_table_game[this.bomb_PosX][this.bomb_PosY - i].breakable = null;
                             create_map.general_table_game[this.bomb_PosX][this.bomb_PosY - i].element.classList.remove("breakable");
-                            console.log("casser à gauche");
-                            create_map.general_table_game[this.bomb_PosX][this.bomb_PosY - i].element.style.backgroundColor = "green";
+                            create_map.general_table_game[this.bomb_PosX][this.bomb_PosY - i].element.style.backgroundColor = "pink";
                         }
                     }
 
                     that.bombUsed = false;
                     this.bomb.remove();
                     that.bombs = [];
-                }, 3000);
+                }, 1000);
             }
         });
+    }, this.botPlayerAction = function () {
+        var that = this;
+        setInterval(function () {
+            if (that.bombs.length > 0) {
+                for (var i = 0; i < that.bomb_power; i++) {
+                    console.log(this.bomb_PosX);
+                    if (this.bomb_PosX + i == that.botPosX && this.bomb_PosY == that.botPosY || this.bomb_PosX - i == that.botPosX && this.bomb_PosY == that.botPosY || this.bomb_PosX == that.botPosX && this.bomb_PosY + i == that.botPosY || this.bomb_PosX == that.botPosX && this.bomb_PosY - i == that.botPosY) {
+                        if (that.botPosY - 1 >= 0 && create_map.general_table_game[that.botPosX][that.botPosY - 1].breakable == null) {
+                            for (var _i4 = 0; _i4 < that.bombs.length; _i4++) {
+                                if (that.botPosY - 1 == that.bombs[_i4][1] && that.botPosX == that.bombs[_i4][0]) {
+                                    that.botPosY += 1;
+                                }
+                            }
+                            that.botPosY -= 1;
+                        } else if (that.botPosX - 1 >= 0 && create_map.general_table_game[that.botPosX - 1][that.botPosY].breakable == null) {
+                            for (var _i5 = 0; _i5 < that.bombs.length; _i5++) {
+                                if (that.botPosY == that.bombs[_i5][1] && that.botPosX - 1 == that.bombs[_i5][0]) {
+                                    that.botPosX += 1;
+                                }
+                            }
+                            that.botPosX -= 1;
+                        } else if (that.botPosY + 1 < create_map.general_table_game.length && create_map.general_table_game[that.botPosX][that.botPosY + 1].breakable == null) {
+                            for (var _i6 = 0; _i6 < that.bombs.length; _i6++) {
+                                if (that.botPosY + 1 == that.bombs[_i6][1] && that.botPosX == that.bombs[_i6][0]) {
+                                    that.botPosY -= 1;
+                                }
+                            }
+                            that.botPosY += 1;
+                        } else if (that.botPosX + 1 < create_map.general_table_game.length && create_map.general_table_game[that.botPosX + 1][that.botPosY].breakable == null) {
+                            for (var _i7 = 0; _i7 < that.bombs.length; _i7++) {
+                                if (that.botPosY == that.bombs[_i7][1] && that.botPosX + 1 == that.bombs[_i7][0]) {
+                                    that.botPosX -= 1;
+                                }
+                            }
+                            that.botPosX += 1;
+                        }
+                    }
+                }
+            }
+            console.log(that.botPosX, that.botPosY);
+            that.bot_player.style.top = create_map.general_table_game[that.botPosX][that.botPosY].element.offsetTop + "px";
+            that.bot_player.style.left = create_map.general_table_game[that.botPosX][that.botPosY].element.offsetLeft + "px";
+        }, 50);
     };
 };
 
-var set_player = new player(0, 0, 1, 2);
+var set_player = new player(2, 2);
 set_player.createPlayer();
 set_player.movePlayer();
 set_player.putBomb();
+set_player.botPlayerAction();
