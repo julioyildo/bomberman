@@ -63,7 +63,7 @@ var map = function (size, breakable_number, items, bombe_plus_one, walk_fast, bo
         this.container.appendChild(tab);
     }
 
-    // console.log(this.general_table_game);
+     console.log(this.general_table_game);
 
 
 
@@ -215,13 +215,9 @@ var map = function (size, breakable_number, items, bombe_plus_one, walk_fast, bo
                 this.push_bombs--;
             }
             else {
-                j--
+                j--;
             }
         }
-        console.log(this.bombe_area_bonus);
-        console.log(this.bombe_plus_one);
-        console.log(this.walk_fast);
-        console.log(this.push_bombs);
     }
 
 
