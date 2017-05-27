@@ -3,11 +3,11 @@ var items = function () {
         var that = this;
         window.addEventListener('keydown', function (e) {
             if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].item) {
-                if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "bombe_area_bonus") {
+                if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "bomb_area_bonus") {
                     set_bomb.bomb_power++;
                 } else if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "push_bombs") {
                     set_bomb.bomb_pusher = true;
-                } else if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "bombe_plus_one") {
+                } else if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "more_bombs") {
                     set_bomb.bomb_number++;
                 }
                 create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].item = false;

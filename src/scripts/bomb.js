@@ -8,10 +8,8 @@ var bomb = function (bomb_number, bomb_power, bomb_timer) {
     this.putBomb = function () {
             var that = this;
             window.addEventListener('keydown', function (e) {
-                console.log(that.bomb_power);
                 e.preventDefault;
                 if (e.keyCode == 32 && that.bomb_number > 0) {
-                    console.log(that.bombs);
                     this.bomb_PosX = set_player.playerPosX;
                     this.bomb_PosY = set_player.playerPosY;
                     this.bomb = document.createElement('div');        
@@ -109,6 +107,27 @@ var bomb = function (bomb_number, bomb_power, bomb_timer) {
 
                             if (that.bombs[i][1] == set_player.playerPosX && that.bombs[i][2] - j == set_player.playerPosY && !that.unbreakableBlockUp) {
                                 window.alert("You lost !");
+                                location.reload();
+                            }
+                            
+                            
+                            
+                            
+                            if (that.bombs[i][1] + j == set_player.botPosX && that.bombs[i][2] == set_player.botPosY && !that.unbreakableBlockRight) {
+                                window.alert("You win !");
+                                location.reload();
+                            }
+                            if (that.bombs[i][1] - j == set_player.botPosX && that.bombs[i][2] == set_player.botPosY && !that.unbreakableBlockLeft) {
+                                window.alert("You win !");
+                                location.reload();
+                            }
+                            if (that.bombs[i][1] == set_player.botPosX && that.bombs[i][2] + j == set_player.botPosY && !that.unbreakableBlockDown) {
+                                window.alert("You win !");
+                                location.reload();
+                            }
+
+                            if (that.bombs[i][1] == set_player.botPosX && that.bombs[i][2] - j == set_player.botPosY && !that.unbreakableBlockUp) {
+                                window.alert("You win !");
                                 location.reload();
                             }
                         }

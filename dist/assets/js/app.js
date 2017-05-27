@@ -10,10 +10,8 @@ var bomb = function bomb(bomb_number, bomb_power, bomb_timer) {
     this.putBomb = function () {
         var that = this;
         window.addEventListener('keydown', function (e) {
-            console.log(that.bomb_power);
             e.preventDefault;
             if (e.keyCode == 32 && that.bomb_number > 0) {
-                console.log(that.bombs);
                 this.bomb_PosX = set_player.playerPosX;
                 this.bomb_PosY = set_player.playerPosY;
                 this.bomb = document.createElement('div');
@@ -105,6 +103,24 @@ var bomb = function bomb(bomb_number, bomb_power, bomb_timer) {
                             window.alert("You lost !");
                             location.reload();
                         }
+
+                        if (that.bombs[i][1] + j == set_player.botPosX && that.bombs[i][2] == set_player.botPosY && !that.unbreakableBlockRight) {
+                            window.alert("You win !");
+                            location.reload();
+                        }
+                        if (that.bombs[i][1] - j == set_player.botPosX && that.bombs[i][2] == set_player.botPosY && !that.unbreakableBlockLeft) {
+                            window.alert("You win !");
+                            location.reload();
+                        }
+                        if (that.bombs[i][1] == set_player.botPosX && that.bombs[i][2] + j == set_player.botPosY && !that.unbreakableBlockDown) {
+                            window.alert("You win !");
+                            location.reload();
+                        }
+
+                        if (that.bombs[i][1] == set_player.botPosX && that.bombs[i][2] - j == set_player.botPosY && !that.unbreakableBlockUp) {
+                            window.alert("You win !");
+                            location.reload();
+                        }
                     }
 
                     that.bomb_number++;
@@ -125,11 +141,11 @@ var items = function items() {
         var that = this;
         window.addEventListener('keydown', function (e) {
             if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].item) {
-                if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "bombe_area_bonus") {
+                if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "bomb_area_bonus") {
                     set_bomb.bomb_power++;
                 } else if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "push_bombs") {
                     set_bomb.bomb_pusher = true;
-                } else if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "bombe_plus_one") {
+                } else if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "more_bombs") {
                     set_bomb.bomb_number++;
                 }
                 create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].item = false;
@@ -406,7 +422,7 @@ var player = function player(player_number) {
                                     while (create_map.general_table_game[set_bomb.bombs[_i2][1]][set_bomb.bombs[_i2][2] + _k2].breakable == null && _k2 < create_map.general_table_game.length - set_bomb.bombs[_i2][2] - 1) {
                                         _k2++;
                                     }
-                                    set_bomb.bombs[_i2][2] = set_bomb.bombs[_i2][2] + _k2;
+                                    set_bomb.bombs[_i2][2] = set_bomb.bombs[_i2][2] + _k2 - 1;
                                     set_bomb.bombs[_i2][0].style.left = create_map.general_table_game[set_bomb.bombs[_i2][1]][set_bomb.bombs[_i2][2]].element.offsetLeft + "px";
                                 }
                                 that.playerPosY -= 1;
@@ -441,7 +457,7 @@ var player = function player(player_number) {
                                     while (create_map.general_table_game[set_bomb.bombs[_i3][1] + _k3][set_bomb.bombs[_i3][2]].breakable == null && _k3 < create_map.general_table_game.length - set_bomb.bombs[_i3][1] - 1) {
                                         _k3++;
                                     }
-                                    set_bomb.bombs[_i3][1] = set_bomb.bombs[_i3][1] + _k3;
+                                    set_bomb.bombs[_i3][1] = set_bomb.bombs[_i3][1] + _k3 - 1;
                                     set_bomb.bombs[_i3][0].style.top = create_map.general_table_game[set_bomb.bombs[_i3][1]][set_bomb.bombs[_i3][2]].element.offsetTop + "px";
                                 }
                                 that.playerPosX -= 1;
