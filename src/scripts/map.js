@@ -1,14 +1,13 @@
 
 // CLASS SET THE MAP
 // bombe_plus_one, walk_fast, bombe_area_bonus, push_bombs
-var map = function (size, breakable_number, items, bombe_plus_one, walk_fast, bombe_area_bonus, push_bombs){
+var map = function (size, breakable_number, items, bombe_plus_one, bombe_area_bonus, push_bombs){
     //PROPRIETIES :
     this.container          = document.querySelector(".bomberman-map");
     this.table_size         = size;
     this.breakable_bumber   = breakable_number;
     this.items              = items;
     this.bombe_plus_one     = bombe_plus_one;
-    this.walk_fast          = walk_fast;
     this.bombe_area_bonus   = bombe_area_bonus;
     this.push_bombs         = push_bombs;
 
@@ -161,7 +160,7 @@ var map = function (size, breakable_number, items, bombe_plus_one, walk_fast, bo
             }
             else
             {
-                i--
+                i--;
             }
         }
     }
@@ -180,38 +179,28 @@ var map = function (size, breakable_number, items, bombe_plus_one, walk_fast, bo
     // FUNCTION SET VALUE OF EACH ITEM
     this.element_value = function ()
     {
-        this.value_items = ["bombe_plus_one", "walk_fast", "bombe_area_bonus",  "push_bombs"];
+        this.value_items = ["more_bombs", "bomb_area_bonus",  "push_bombs"];
 
 
-        relance_boucle:
+//        relance_boucle:
         for (let j = 0; j < this.is_item.length; j++)
         {
             var random_item_value = Math.floor(Math.random() * this.value_items.length);
 
 
-            if (this.value_items[random_item_value] === "bombe_plus_one" && this.bombe_plus_one > 0)
+            if (this.value_items[random_item_value] === "more_bombs" && this.bombe_plus_one > 0)
             {
                 this.is_item[j].value_item = this.value_items[random_item_value];
-                this.is_item[j].element.classList.add('bombe_plus_one');
                 this.bombe_plus_one--;
             }
-            else if (this.value_items[random_item_value] === "walk_fast" && this.walk_fast  > 0)
+            else if (this.value_items[random_item_value] === "bomb_area_bonus" && this.bombe_area_bonus > 0)
             {
                 this.is_item[j].value_item = this.value_items[random_item_value];
-                this.is_item[j].element.classList.add('walk_fast');
-                this.walk_fast-- ;
-
-            }
-            else if (this.value_items[random_item_value] === "bombe_area_bonus" && this.bombe_area_bonus > 0)
-            {
-                this.is_item[j].value_item = this.value_items[random_item_value];
-                this.is_item[j].element.classList.add('bombe_area_bonus');
                 this.bombe_area_bonus--;
             }
             else if (this.value_items[random_item_value] === "push_bombs" && this.push_bombs > 0)
             {
                 this.is_item[j].value_item = this.value_items[random_item_value];
-                // this.is_item[j].element.classList.add('push_bombs');
                 this.push_bombs--;
             }
             else {
@@ -233,7 +222,7 @@ var map = function (size, breakable_number, items, bombe_plus_one, walk_fast, bo
 
 
 // SET THE MAP
-var create_map = new map(11,200, 40, 10, 10, 10, 10);
+var create_map = new map(11,200, 18, 6, 10, 2);
 create_map.create_map();
 create_map.unbreakable();
 create_map.isEmpty();

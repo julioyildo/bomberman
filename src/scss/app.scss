@@ -14,17 +14,24 @@ body {
     background: #ccc;
 }
 
+.bomberman-map {
+    background-image: url(../img/limite_autour_map.png);
+    width: 650px;
+    margin: 0px auto;
+}
+
 .bomberman-map .table {
-    width: 750px;
-    margin: 0 auto;
+    width: 550px;
+    margin: 0px 65px;
+    padding: 50px 0px;
     position: relative;
 }
 
 .bomberman-map .table .cell {
-    height: 60px;
-    width: 60px;
+    height: 50px;
+    width: 50px;
     float: left;
-    border: 1px solid black;
+    background-image: url(../img/grass3.png);
 }
 
 .bomberman-map .table .empty {
@@ -32,39 +39,137 @@ body {
 }
 
 .bomberman-map .table .unbreakable {
-    background-color: black;
+    background-image: url(../img/tronc.png);
 }
 
 .bomberman-map .table .breakable {
-    background-color: brown;
+    background-image: url(../img/buisson.png);
 }
 
-.bomberman-map .table .item {
-    background-color: red;
+.bomberman-map .table .horizontalexp {
+    background-image: url(../img/horizontal.png);
 }
 
-.bomberman-map .table .bombe_plus_one{
-    background-color: grey;
+.bomberman-map .table .verticalexp {
+    background-image: url(../img/seulement_haut.png);
 }
-.bomberman-map .table .bombe_area_bonus{
-    background-color: yellow;
+
+.bomberman-map .table .more_bombs {
+    background-image: url(../img/bomb.jpg);
 }
-.bomberman-map .table .walk_fast{
-    background-color: green;
+
+.bomberman-map .table .bomb_area_bonus {
+    background-image: url(../img/bubble.jpg);
+}
+
+.bomberman-map .table .push_bombs {
+    background-image: url(../img/push.png);
 }
 
 .bomberman-map .table .player {
-    background: blue;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     position: absolute;
     z-index: 1;
+    background-image: url(../img/macron.png);
+}
+
+.bomberman-map .table .player.down {
+    transition: top 0.1s linear;
+    background-position: 0px 0px;
+}
+
+.bomberman-map .table .player.down.down1 {
+    background-position: 50px 0px;
+}
+
+.bomberman-map .table .player.down.down2 {
+    background-position: 100px 0px;
+}
+
+.bomberman-map .table .player.down.down3 {
+    background-position: 150px 0px;
+}
+
+.bomberman-map .table .player.left {
+    transition: left 0.1s linear;
+    background-position: 0px 150px;
+}
+
+.bomberman-map .table .player.left.left1 {
+    background-position: 50px 150px;
+}
+
+.bomberman-map .table .player.left.left2 {
+    background-position: 100px 150px;
+}
+
+.bomberman-map .table .player.left.left3 {
+    background-position: 150px 150px;
+}
+
+.bomberman-map .table .player.up {
+    transition: top 0.1s linear;
+    background-position: 0px 50px;
+}
+
+.bomberman-map .table .player.up.up1 {
+    background-position: 50px 50px;
+}
+
+.bomberman-map .table .player.up.up2 {
+    background-position: 100px 50px;
+}
+
+.bomberman-map .table .player.up.up3 {
+    background-position: 150px 50px;
+}
+
+.bomberman-map .table .player.right {
+    transition: left 0.1s linear;
+    background-position: 50px 100px;
+}
+
+.bomberman-map .table .player.right.right1 {
+    background-position: 0px 100px;
+}
+
+.bomberman-map .table .player.right.right2 {
+    background-position: 150px 100px;
+}
+
+.bomberman-map .table .player.right.right3 {
+    background-position: 100px 100px;
+}
+
+.bomberman-map .table .bot {
+    background-image: url(../img/lepen.png);
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: 1;
+    transition: left 0.1s ease;
 }
 
 .bomberman-map .table .bomb {
-    background: white;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     position: absolute;
     z-index: 0;
+}
+
+.bomberman-map .table .bomb3 {
+    background-image: url(../img/bomb.png);
+}
+
+.bomberman-map .table .bomb2 {
+    background-image: url(../img/bomb3.png);
+}
+
+.bomberman-map .table .bomb1 {
+    background-image: url(../img/bomb4.png);
+}
+
+.bomberman-map .table .bomb0 {
+    background-image: url(../img/entre%204%20case.png);
 }
