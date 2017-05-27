@@ -72,7 +72,7 @@ body {
     position: absolute;
     z-index: 1;
     background-image: url(../img/macron.png);
-      transition: left 0.1s linear, top 0.1s linear;
+    transition: left 0.1s linear, top 0.1s linear;
 }
 
 .bomberman-map .table .player.down {
@@ -170,4 +170,41 @@ body {
 
 .bomberman-map .table .bomb0 {
     background-image: url(../img/entre%204%20case.png);
+}
+
+.character-selection {
+    background: white;
+    width: 90%;
+    height: 90%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    text-align: center;
+}
+
+.character-selection .characters {
+    width: 90%;
+    height: 80%;
+    margin: 50px auto;
+}
+
+.character-selection .characters .macron {
+    background-image: url(../img/macronvrai.jpg);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 40%;
+    height: 80%;
+    margin-right: 20%;
+    float: left;
+}
+
+.character-selection .characters .lepen {
+    background-image: url(../img/lepenvrai.jpg);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 40%;
+    height: 80%;
+    float: left;
+    background-position: 0 0;
 }

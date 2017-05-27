@@ -2,7 +2,7 @@ var bomb = function (bomb_number, bomb_power, bomb_timer) {
     this.bomb_power = bomb_power;
     this.bomb_number = bomb_number;
     this.bomb_timer = bomb_timer;
-    this.bomb_pusher = true;
+    this.bomb_pusher = false;
     this.bombs = [];
 
     this.putBomb = function () {
@@ -31,6 +31,10 @@ var bomb = function (bomb_number, bomb_power, bomb_timer) {
             this.unbreakableBlockDown = false;
             this.unbreakableBlockLeft = false;
             this.unbreakableBlockRight = false;
+            this.breakableBlockUp = false;
+            this.breakableBlockDown = false;
+            this.breakableBlockLeft = false;
+            this.breakableBlockRight = false;
             var interval = setInterval(function () {
                 that.bombs[i][3]--;
                 if (that.bombs[i][3] == 2) {
@@ -46,44 +50,48 @@ var bomb = function (bomb_number, bomb_power, bomb_timer) {
                     setTimeout(function () {
                         for (let j = 1; j < that.bomb_power; j++) {
 
-                            if (that.bombs[i][1] + j < create_map.general_table_game.length && create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].breakable && !that.unbreakableBlockRight) {
+                            if (that.bombs[i][1] + j < create_map.general_table_game.length && create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].breakable && !that.unbreakableBlockRight && !that.breakableBlockRight) {
                                 create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].breakable = null;
                                 create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].element.classList.remove("breakable");
-                                if(create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].item){
+                                if (create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].item) {
                                     create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].element.classList.add(create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].value_item);
                                 }
-                            } else if (that.bombs[i][1] + j < create_map.general_table_game.length && create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].breakable==false) {
+                                that.breakableBlockRight = true;
+                            } else if (that.bombs[i][1] + j < create_map.general_table_game.length && create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].breakable == false) {
                                 that.unbreakableBlockRight = true;
                             }
 
-                            if (that.bombs[i][1] - j >= 0 && create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].breakable && !that.unbreakableBlockLeft) {
+                            if (that.bombs[i][1] - j >= 0 && create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].breakable && !that.unbreakableBlockLeft && !that.breakableBlockLeft) {
                                 create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].breakable = null;
                                 create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].element.classList.remove("breakable");
-                                if(create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].item){
+                                if (create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].item) {
                                     create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].element.classList.add(create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].value_item);
                                 }
-                            } else if (that.bombs[i][1] - j >= 0 && create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].breakable==false) {
+                                that.breakableBlockLeft = true;
+                            } else if (that.bombs[i][1] - j >= 0 && create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].breakable == false) {
                                 that.unbreakableBlockLeft = true;
                             }
 
 
-                            if (that.bombs[i][2] + j < create_map.general_table_game.length && create_map.general_table_game[this.bomb_PosX][that.bombs[i][2] + j].breakable && !that.unbreakableBlockDown) {
+                            if (that.bombs[i][2] + j < create_map.general_table_game.length && create_map.general_table_game[this.bomb_PosX][that.bombs[i][2] + j].breakable && !that.unbreakableBlockDown && !that.breakableBlockDown) {
                                 create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] + j].breakable = null;
                                 create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] + j].element.classList.remove("breakable");
-                                if(create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] + j].item){
+                                if (create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] + j].item) {
                                     create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] + j].element.classList.add(create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] + j].value_item);
                                 }
-                            } else if (that.bombs[i][2] + j < create_map.general_table_game.length && create_map.general_table_game[this.bomb_PosX][that.bombs[i][2] + j].breakable==false) {
+                                that.breakableBlockDown = true;
+                            } else if (that.bombs[i][2] + j < create_map.general_table_game.length && create_map.general_table_game[this.bomb_PosX][that.bombs[i][2] + j].breakable == false) {
                                 that.unbreakableBlockDown = true;
                             }
 
-                            if (that.bombs[i][2] - j >= 0 && create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].breakable && !that.unbreakableBlockUp) {
+                            if (that.bombs[i][2] - j >= 0 && create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].breakable && !that.unbreakableBlockUp && !that.breakableBlockUp) {
                                 create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].breakable = null;
                                 create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].element.classList.remove("breakable");
-                                if(create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].item){
+                                if (create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].item) {
                                     create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].element.classList.add(create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].value_item);
                                 }
-                            } else if (that.bombs[i][2] - j >= 0 && create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].breakable==false) {
+                                that.breakableBlockUp = true;
+                            } else if (that.bombs[i][2] - j >= 0 && create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].breakable == false) {
                                 that.unbreakableBlockUp = true;
                             }
 
@@ -92,41 +100,41 @@ var bomb = function (bomb_number, bomb_power, bomb_timer) {
 
 
 
-                            if (that.bombs[i][1] + j == set_player.playerPosX && that.bombs[i][2] == set_player.playerPosY && !that.unbreakableBlockRight) {
+                            if (that.bombs[i][1] + j == set_player.playerPosX && that.bombs[i][2] == set_player.playerPosY && !that.unbreakableBlockRight && !that.breakableBlockRight) {
                                 window.alert("You lost !");
                                 location.reload();
                             }
-                            if (that.bombs[i][1] - j == set_player.playerPosX && that.bombs[i][2] == set_player.playerPosY && !that.unbreakableBlockLeft) {
+                            if (that.bombs[i][1] - j == set_player.playerPosX && that.bombs[i][2] == set_player.playerPosY && !that.unbreakableBlockLeft && !that.breakableBlockLeft) {
                                 window.alert("You lost !");
                                 location.reload();
                             }
-                            if (that.bombs[i][1] == set_player.playerPosX && that.bombs[i][2] + j == set_player.playerPosY && !that.unbreakableBlockDown) {
+                            if (that.bombs[i][1] == set_player.playerPosX && that.bombs[i][2] + j == set_player.playerPosY && !that.unbreakableBlockDown && !that.breakableBlockDown) {
                                 window.alert("You lost !");
                                 location.reload();
                             }
 
-                            if (that.bombs[i][1] == set_player.playerPosX && that.bombs[i][2] - j == set_player.playerPosY && !that.unbreakableBlockUp) {
+                            if (that.bombs[i][1] == set_player.playerPosX && that.bombs[i][2] - j == set_player.playerPosY && !that.unbreakableBlockUp && !that.breakableBlockUp) {
                                 window.alert("You lost !");
                                 location.reload();
                             }
-                            
-                            
-                            
-                            
-                            if (that.bombs[i][1] + j == set_player.botPosX && that.bombs[i][2] == set_player.botPosY && !that.unbreakableBlockRight) {
+
+
+
+
+                            if (that.bombs[i][1] + j == set_player.botPosX && that.bombs[i][2] == set_player.botPosY && !that.unbreakableBlockRight && !that.breakableBlockRight) {
                                 window.alert("You win !");
                                 location.reload();
                             }
-                            if (that.bombs[i][1] - j == set_player.botPosX && that.bombs[i][2] == set_player.botPosY && !that.unbreakableBlockLeft) {
+                            if (that.bombs[i][1] - j == set_player.botPosX && that.bombs[i][2] == set_player.botPosY && !that.unbreakableBlockLeft && !that.breakableBlockLeft) {
                                 window.alert("You win !");
                                 location.reload();
                             }
-                            if (that.bombs[i][1] == set_player.botPosX && that.bombs[i][2] + j == set_player.botPosY && !that.unbreakableBlockDown) {
+                            if (that.bombs[i][1] == set_player.botPosX && that.bombs[i][2] + j == set_player.botPosY && !that.unbreakableBlockDown && !that.breakableBlockDown) {
                                 window.alert("You win !");
                                 location.reload();
                             }
 
-                            if (that.bombs[i][1] == set_player.botPosX && that.bombs[i][2] - j == set_player.botPosY && !that.unbreakableBlockUp) {
+                            if (that.bombs[i][1] == set_player.botPosX && that.bombs[i][2] - j == set_player.botPosY && !that.unbreakableBlockUp && !that.breakableBlockUp) {
                                 window.alert("You win !");
                                 location.reload();
                             }
@@ -138,7 +146,7 @@ var bomb = function (bomb_number, bomb_power, bomb_timer) {
                     }, 300)
                     clearInterval(interval);
                 }
-            }, 1000);
+            }, (bomb_timer / 3) * 1000);
 
         }
 }
