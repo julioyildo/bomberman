@@ -112,7 +112,6 @@ var bomb = function (bomb_number, bomb_power, bomb_timer) {
                                 location.reload();
                             }
                         }
-                        console.log(that.unbreakableBlockUp, that.unbreakableBlockDown, that.unbreakableBlockLeft, that.unbreakableBlockRight);
 
                         that.bomb_number++;
                         that.bombs[i][0].remove();

@@ -10,6 +10,7 @@ var player = function (player_number) {
         y: create_map.general_table_game.length - 1
     }];
 
+
     //Pour faire affancer le player, il faut vérifier grâce au tableau générale si les celluls de la
     // direction souhaité sont des wall  ou de breakable.  Si ce n'est pas le cas alors il peut avancer.
 
@@ -44,18 +45,14 @@ var player = function (player_number) {
                         if (set_bomb.bombs.length > 0) {
                             for (let i = 0; i < set_bomb.bombs.length; i++) {
                                 if (that.playerPosY - 1 == set_bomb.bombs[i][2] && that.playerPosX == set_bomb.bombs[i][1]) {
-                                    //                                    if (that.bomb_pusher) {
-                                    //                                        let k = 0;
-                                    //                                        for (let j = 0; j < create_map.general_table_game.length; j++) {
-                                    //                                            if (create_map.general_table_game[(that.bombs[i][1])][(that.bombs[i][2]) - k].breakable == null) {
-                                    //                                                k++;
-                                    //                                            } else {
-                                    //                                                that.bombs[i][2] = that.bombs[i][2] - k - 1;
-                                    //                                                that.bombs[i][0].style.left = create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2]].element.offsetLeft + "px";
-                                    //
-                                    //                                            }
-                                    //                                        }
-                                    //                                    }
+                                    if (set_bomb.bomb_pusher) {
+                                        let k = 0;
+                                        while (k < create_map.general_table_game.length - (create_map.general_table_game.length - set_bomb.bombs[i][2] + 1) && create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2] - k].breakable == null) {
+                                            k++;
+                                        }
+                                        set_bomb.bombs[i][2] = set_bomb.bombs[i][2] - k - 1;
+                                        set_bomb.bombs[i][0].style.left = create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2]].element.offsetLeft + "px";
+                                    }
                                     that.playerPosY += 1;
                                 }
                             }
@@ -83,19 +80,15 @@ var player = function (player_number) {
                     if (that.playerPosX - 1 >= 0 && create_map.general_table_game[that.playerPosX - 1][that.playerPosY].breakable == null) {
                         if (set_bomb.bombs.length > 0) {
                             for (let i = 0; i < set_bomb.bombs.length; i++) {
-                                if (that.playerPosY == set_bomb.bombs[i][2] && that.playerPosX - 1 == set_bomb.bombs[i][1]) {
-                                    //                                    if (that.bomb_pusher) {
-                                    //                                        let k = 0;
-                                    //                                        for (let j = 0; j < create_map.general_table_game.length; j++) {
-                                    //                                            if (create_map.general_table_game[(that.bombs[i][1]) - k][(that.bombs[i][2])].breakable == null) {
-                                    //                                                k++;
-                                    //                                            } else {
-                                    //                                                that.bombs[i][1] = that.bombs[i][1] - k - 1;
-                                    //                                                that.bombs[i][0].style.top = create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2]].element.offsetTop + "px";
-                                    //
-                                    //                                            }
-                                    //                                        }
-                                    //                                    }
+                                if (that.playerPosY == set_bomb.bombs[i][2] && that.playerPosX- 1 == set_bomb.bombs[i][1]) {
+                                    if (set_bomb.bomb_pusher) {
+                                        let k = 0;
+                                        while (k < create_map.general_table_game.length - (create_map.general_table_game.length - set_bomb.bombs[i][1] + 1) && create_map.general_table_game[set_bomb.bombs[i][1]- k][set_bomb.bombs[i][2]].breakable == null) {
+                                            k++;
+                                        }
+                                        set_bomb.bombs[i][1] = set_bomb.bombs[i][1] - k - 1;
+                                        set_bomb.bombs[i][0].style.top = create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2]].element.offsetTop + "px";
+                                    }
                                     that.playerPosX += 1;
                                 }
                             }
@@ -123,18 +116,14 @@ var player = function (player_number) {
                         if (set_bomb.bombs.length > 0) {
                             for (let i = 0; i < set_bomb.bombs.length; i++) {
                                 if (that.playerPosY + 1 == set_bomb.bombs[i][2] && that.playerPosX == set_bomb.bombs[i][1]) {
-                                    //                                    if (that.bomb_pusher) {
-                                    //                                        let k = 0;
-                                    //                                        for (let j = 0; j < create_map.general_table_game.length; j++) {
-                                    //                                            if (create_map.general_table_game[(that.bombs[i][1])][(that.bombs[i][2]) + k].breakable == null) {
-                                    //                                                k++;
-                                    //                                            } else {
-                                    //                                                that.bombs[i][2] = that.bombs[i][2] + k - 1;
-                                    //                                                that.bombs[i][0].style.left = create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2]].element.offsetLeft + "px";
-                                    //
-                                    //                                            }
-                                    //                                        }
-                                    //                                    }
+                                    if (set_bomb.bomb_pusher) {
+                                        let k = 0;
+                                        while (create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2] + k].breakable == null && k < (create_map.general_table_game.length - set_bomb.bombs[i][2] - 1)) {
+                                            k++;
+                                        }
+                                        set_bomb.bombs[i][2] = set_bomb.bombs[i][2] + k;
+                                        set_bomb.bombs[i][0].style.left = create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2]].element.offsetLeft + "px";
+                                    }
                                     that.playerPosY -= 1;
                                 }
                             }
@@ -162,18 +151,14 @@ var player = function (player_number) {
                         if (set_bomb.bombs.length > 0) {
                             for (let i = 0; i < set_bomb.bombs.length; i++) {
                                 if (that.playerPosY == set_bomb.bombs[i][2] && that.playerPosX + 1 == set_bomb.bombs[i][1]) {
-                                    //                                    if (that.bomb_pusher) {
-                                    //                                        let k = 0;
-                                    //                                        for (let j = 0; j < create_map.general_table_game.length; j++) {
-                                    //                                            if (create_map.general_table_game[(that.bombs[i][1]) + k][(that.bombs[i][2])].breakable == null) {
-                                    //                                                k++;
-                                    //                                            } else {
-                                    //                                                that.bombs[i][1] = that.bombs[i][1] + k - 1;
-                                    //                                                that.bombs[i][0].style.top = create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2]].element.offsetTop + "px";
-                                    //
-                                    //                                            }
-                                    //                                        }
-                                    //                                    }
+                                    if (set_bomb.bomb_pusher) {
+                                        let k = 0;
+                                        while (create_map.general_table_game[set_bomb.bombs[i][1] + k][set_bomb.bombs[i][2]].breakable == null && k < (create_map.general_table_game.length - set_bomb.bombs[i][1] - 1)) {
+                                            k++;
+                                        }
+                                        set_bomb.bombs[i][1] = set_bomb.bombs[i][1] + k;
+                                        set_bomb.bombs[i][0].style.top = create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2]].element.offsetTop + "px";
+                                    }
                                     that.playerPosX -= 1;
                                 }
                             }
