@@ -115,7 +115,7 @@ var bot = function () {
 
         // If this new location is valid, mark it as 'Visited'
         if (newLocation.status === 'Valid') {
-            grid[newLocation.distanceFromTop][newLocation.distanceFromLeft] = 'Visited';
+            grid[newLocation.distanceFromTop][newLocation.distanceFromLeft].value_bot = 'Visited';
         }
 
         return newLocation;

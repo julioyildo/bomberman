@@ -363,14 +363,6 @@ var bomb = function bomb(bomb_number, bomb_power, bomb_timer) {
         });
     }, this.explodeBomb = function (i) {
         var that = this;
-        this.unbreakableBlockUp = false;
-        this.unbreakableBlockDown = false;
-        this.unbreakableBlockLeft = false;
-        this.unbreakableBlockRight = false;
-        this.breakableBlockUp = false;
-        this.breakableBlockDown = false;
-        this.breakableBlockLeft = false;
-        this.breakableBlockRight = false;
         var interval = setInterval(function () {
             that.bombs[i][3]--;
             if (that.bombs[i][3] == 2) {
@@ -384,7 +376,7 @@ var bomb = function bomb(bomb_number, bomb_power, bomb_timer) {
                 that.bombs[i][0].classList.add("bomb0");
 
                 setTimeout(function () {
-                    for (var j = 1; j < that.bomb_power; j++) {
+                    for (var j = 0; j < that.bomb_power; j++) {
 
                         if (that.bombs[i][1] + j < create_map.general_table_game.length && create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].breakable && !that.bombs[i][5] && !that.bombs[i][9]) {
                             create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].breakable = null;
@@ -592,7 +584,7 @@ var bot = function bot() {
 
         // If this new location is valid, mark it as 'Visited'
         if (newLocation.status === 'Valid') {
-            grid[newLocation.distanceFromTop][newLocation.distanceFromLeft] = 'Visited';
+            grid[newLocation.distanceFromTop][newLocation.distanceFromLeft].value_bot = 'Visited';
         }
 
         return newLocation;
