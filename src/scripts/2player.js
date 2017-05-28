@@ -57,7 +57,7 @@ var player = function (player_number, player_bomb_number, player_bomb_power) {
                                 if (that.playerPosY - 1 == bombs[i][2] && that.playerPosX == bombs[i][1]) {
                                     
                                     //BOMBPUSHER ITEM
-                                    if (this.player_bomb_pusher) {
+                                    if (that.player_bomb_pusher) {
                                         let k = 0;
                                         while (k < create_map.general_table_game.length - (create_map.general_table_game.length - bombs[i][2] + 1) && create_map.general_table_game[bombs[i][1]][bombs[i][2] - k].breakable == null) {
                                             k++;
@@ -99,7 +99,7 @@ var player = function (player_number, player_bomb_number, player_bomb_power) {
                                 if (that.playerPosY == bombs[i][2] && that.playerPosX - 1 == bombs[i][1]) {
                                     
                                     //BOMBPUSHER ITEM
-                                    if (this.player_bomb_pusher) {
+                                    if (that.player_bomb_pusher) {
                                         let k = 0;
                                         while (k < create_map.general_table_game.length - (create_map.general_table_game.length - bombs[i][1] + 1) && create_map.general_table_game[bombs[i][1] - k][bombs[i][2]].breakable == null) {
                                             k++;
@@ -140,7 +140,7 @@ var player = function (player_number, player_bomb_number, player_bomb_power) {
                                 if (that.playerPosY + 1 == bombs[i][2] && that.playerPosX == bombs[i][1]) {
                                     
                                     //BOMBPUSHER ITEM
-                                    if (this.player_bomb_pusher) {
+                                    if (that.player_bomb_pusher) {
                                         let k = 0;
                                         while (create_map.general_table_game[bombs[i][1]][bombs[i][2] + k].breakable == null && k < (create_map.general_table_game.length - bombs[i][2] - 1)) {
                                             k++;
@@ -181,7 +181,7 @@ var player = function (player_number, player_bomb_number, player_bomb_power) {
                                 if (that.playerPosY == bombs[i][2] && that.playerPosX + 1 == bombs[i][1]) {
                                     
                                     //BOMBPUSHER ITEM
-                                    if (this.player_bomb_pusher) {
+                                    if (that.player_bomb_pusher) {
                                         let k = 0;
                                         while (create_map.general_table_game[bombs[i][1] + k][bombs[i][2]].breakable == null && k < (create_map.general_table_game.length - bombs[i][1] - 1)) {
                                             k++;
