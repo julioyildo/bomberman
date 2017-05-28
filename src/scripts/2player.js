@@ -1,20 +1,25 @@
 // CLASS SET THE PLAYER
 
-var player = function (player_number) {
+var player = function (player_number, player_bomb_number, player_bomb_range) {
     this.player_number = player_number;
+    this.player_bomb_number = player_bomb_number;
+    this.player_bomb_range = player_bomb_range;
+    this.player_bomb_pusher = false;
     this.players_positions = [{
         x: 0,
         y: 0
     }, {
-        x: create_map.general_table_game.length-1,
-        y: create_map.general_table_game.length-1
+        x: create_map.general_table_game.length - 1,
+        y: create_map.general_table_game.length - 1
+    }, {
+        x: 0,
+        y: create_map.general_table_game.length - 1
+    }, {
+        x: create_map.general_table_game.length - 1,
+        y: 0
     }];
 
-
-    //Pour faire affancer le player, il faut vérifier grâce au tableau générale si les celluls de la
-    // direction souhaité sont des wall  ou de breakable.  Si ce n'est pas le cas alors il peut avancer.
-
-    // SET THE PLAYER POSITION :
+    // CREATE A PLAYER AND BOTS AND SET POSITION DEPENDING ON NUMBER OF PLAYERS:
     this.createPlayer = function () {
             for (let i = 0; i < this.player_number; i++) {
                 this.player_element = document.createElement("div");
@@ -29,6 +34,7 @@ var player = function (player_number) {
                     this.playerPosY = this.players_positions[0].y;
                 } else {
                     this.player_element.classList.add("bot");
+                    this.player_element.classList.add("bot");
                     this.bot_player = this.player_element;
                     this.botPosX = this.players_positions[i].x;
                     this.botPosY = this.players_positions[i].y;
@@ -36,27 +42,35 @@ var player = function (player_number) {
             }
         },
 
+        
+        //MOVE PLAYER
         this.movePlayer = function () {
             var that = this;
             window.addEventListener("keydown", function (e) {
                 e.preventDefault();
                 if (e.keyCode == 37) {
                     if (that.playerPosY - 1 >= 0 && create_map.general_table_game[that.playerPosX][that.playerPosY - 1].breakable == null) {
-                        if (set_bomb.bombs.length > 0) {
-                            for (let i = 0; i < set_bomb.bombs.length; i++) {
-                                if (that.playerPosY - 1 == set_bomb.bombs[i][2] && that.playerPosX == set_bomb.bombs[i][1]) {
-                                    if (set_bomb.bomb_pusher) {
+                        
+                        //COLLISION WITH BOMBS
+                        if (bombs.length > 0) {
+                            for (let i = 0; i < bombs.length; i++) {
+                                if (that.playerPosY - 1 == bombs[i][2] && that.playerPosX == bombs[i][1]) {
+                                    
+                                    //BOMBPUSHER ITEM
+                                    if (this.bomb_pusher) {
                                         let k = 0;
-                                        while (k < create_map.general_table_game.length - (create_map.general_table_game.length - set_bomb.bombs[i][2] + 1) && create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2] - k].breakable == null) {
+                                        while (k < create_map.general_table_game.length - (create_map.general_table_game.length - bombs[i][2] + 1) && create_map.general_table_game[bombs[i][1]][bombs[i][2] - k].breakable == null) {
                                             k++;
                                         }
-                                        set_bomb.bombs[i][2] = set_bomb.bombs[i][2] - k - 1;
-                                        set_bomb.bombs[i][0].style.left = create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2]].element.offsetLeft + "px";
+                                        bombs[i][2] = bombs[i][2] - k - 1;
+                                        bombs[i][0].style.left = create_map.general_table_game[bombs[i][1]][bombs[i][2]].element.offsetLeft + "px";
                                     }
                                     that.playerPosY += 1;
                                 }
                             }
                         }
+                        
+                        //SPRITE ANIMATION
                         that.real_player.className = "player";
                         that.real_player.classList.add("left");
                         setTimeout(function () {
@@ -78,21 +92,27 @@ var player = function (player_number) {
 
                 } else if (e.keyCode == 38) {
                     if (that.playerPosX - 1 >= 0 && create_map.general_table_game[that.playerPosX - 1][that.playerPosY].breakable == null) {
-                        if (set_bomb.bombs.length > 0) {
-                            for (let i = 0; i < set_bomb.bombs.length; i++) {
-                                if (that.playerPosY == set_bomb.bombs[i][2] && that.playerPosX- 1 == set_bomb.bombs[i][1]) {
-                                    if (set_bomb.bomb_pusher) {
+                        
+                        //COLLISION WITH BOMBS
+                        if (bombs.length > 0) {
+                            for (let i = 0; i < bombs.length; i++) {
+                                if (that.playerPosY == bombs[i][2] && that.playerPosX - 1 == bombs[i][1]) {
+                                    
+                                    //BOMBPUSHER ITEM
+                                    if (this.bomb_pusher) {
                                         let k = 0;
-                                        while (k < create_map.general_table_game.length - (create_map.general_table_game.length - set_bomb.bombs[i][1] + 1) && create_map.general_table_game[set_bomb.bombs[i][1]- k][set_bomb.bombs[i][2]].breakable == null) {
+                                        while (k < create_map.general_table_game.length - (create_map.general_table_game.length - bombs[i][1] + 1) && create_map.general_table_game[bombs[i][1] - k][bombs[i][2]].breakable == null) {
                                             k++;
                                         }
-                                        set_bomb.bombs[i][1] = set_bomb.bombs[i][1] - k - 1;
-                                        set_bomb.bombs[i][0].style.top = create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2]].element.offsetTop + "px";
+                                        bombs[i][1] = bombs[i][1] - k - 1;
+                                        bombs[i][0].style.top = create_map.general_table_game[bombs[i][1]][bombs[i][2]].element.offsetTop + "px";
                                     }
                                     that.playerPosX += 1;
                                 }
                             }
                         }
+                        
+                        //SPRITE ANIMATION
                         that.real_player.className = "player";
                         that.real_player.classList.add("up");
                         setTimeout(function () {
@@ -113,21 +133,27 @@ var player = function (player_number) {
                     }
                 } else if (e.keyCode == 39) {
                     if (that.playerPosY + 1 < create_map.general_table_game.length && create_map.general_table_game[that.playerPosX][that.playerPosY + 1].breakable == null) {
-                        if (set_bomb.bombs.length > 0) {
-                            for (let i = 0; i < set_bomb.bombs.length; i++) {
-                                if (that.playerPosY + 1 == set_bomb.bombs[i][2] && that.playerPosX == set_bomb.bombs[i][1]) {
-                                    if (set_bomb.bomb_pusher) {
+                        
+                        //COLLISION WITH BOMBS
+                        if (bombs.length > 0) {
+                            for (let i = 0; i < bombs.length; i++) {
+                                if (that.playerPosY + 1 == bombs[i][2] && that.playerPosX == bombs[i][1]) {
+                                    
+                                    //BOMBPUSHER ITEM
+                                    if (this.bomb_pusher) {
                                         let k = 0;
-                                        while (create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2] + k].breakable == null && k < (create_map.general_table_game.length - set_bomb.bombs[i][2] - 1)) {
+                                        while (create_map.general_table_game[bombs[i][1]][bombs[i][2] + k].breakable == null && k < (create_map.general_table_game.length - bombs[i][2] - 1)) {
                                             k++;
                                         }
-                                        set_bomb.bombs[i][2] = set_bomb.bombs[i][2] + k - 1;
-                                        set_bomb.bombs[i][0].style.left = create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2]].element.offsetLeft + "px";
+                                        bombs[i][2] = bombs[i][2] + k - 1;
+                                        bombs[i][0].style.left = create_map.general_table_game[bombs[i][1]][bombs[i][2]].element.offsetLeft + "px";
                                     }
                                     that.playerPosY -= 1;
                                 }
                             }
                         }
+                        
+                        //SPRITE ANIMATION
                         that.real_player.className = "player";
                         that.real_player.classList.add("right");
                         setTimeout(function () {
@@ -148,21 +174,27 @@ var player = function (player_number) {
                     }
                 } else if (e.keyCode == 40) {
                     if (that.playerPosX + 1 < create_map.general_table_game.length && create_map.general_table_game[that.playerPosX + 1][that.playerPosY].breakable == null) {
-                        if (set_bomb.bombs.length > 0) {
-                            for (let i = 0; i < set_bomb.bombs.length; i++) {
-                                if (that.playerPosY == set_bomb.bombs[i][2] && that.playerPosX + 1 == set_bomb.bombs[i][1]) {
-                                    if (set_bomb.bomb_pusher) {
+                        
+                        //COLLISION WITH BOMBS
+                        if (bombs.length > 0) {
+                            for (let i = 0; i < bombs.length; i++) {
+                                if (that.playerPosY == bombs[i][2] && that.playerPosX + 1 == bombs[i][1]) {
+                                    
+                                    //BOMBPUSHER ITEM
+                                    if (this.bomb_pusher) {
                                         let k = 0;
-                                        while (create_map.general_table_game[set_bomb.bombs[i][1] + k][set_bomb.bombs[i][2]].breakable == null && k < (create_map.general_table_game.length - set_bomb.bombs[i][1] - 1)) {
+                                        while (create_map.general_table_game[bombs[i][1] + k][bombs[i][2]].breakable == null && k < (create_map.general_table_game.length - bombs[i][1] - 1)) {
                                             k++;
                                         }
-                                        set_bomb.bombs[i][1] = set_bomb.bombs[i][1] + k - 1;
-                                        set_bomb.bombs[i][0].style.top = create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2]].element.offsetTop + "px";
+                                        bombs[i][1] = bombs[i][1] + k - 1;
+                                        bombs[i][0].style.top = create_map.general_table_game[bombs[i][1]][bombs[i][2]].element.offsetTop + "px";
                                     }
                                     that.playerPosX -= 1;
                                 }
                             }
                         }
+                        
+                        //SPRITE ANIMATION
                         that.real_player.className = "player";
                         that.real_player.classList.add("down");
                         setTimeout(function () {
@@ -182,13 +214,32 @@ var player = function (player_number) {
                         that.playerPosX += 1;
                     }
                 }
-
+                
+                //ASSIGN NEW POSITION TO THE PLAYER
                 that.real_player.style.top = create_map.general_table_game[that.playerPosX][that.playerPosY].element.offsetTop + "px";
                 that.real_player.style.left = create_map.general_table_game[that.playerPosX][that.playerPosY].element.offsetLeft + "px";
             });
+        },
+
+        //DROP A BOMB BY USING THE BOMB OBJECT
+        this.dropBomb = function () {
+            var set_player_bomb = new bomb(set_player.playerPosX, set_player.playerPosY, set_player.player_bomb_number, set_player.player_bomb_range, 3);
+            set_player_bomb.putBomb();
         }
 }
 
-var set_player = new player(2);
+var set_player = new player(2, 1, 2);
 set_player.createPlayer();
 set_player.movePlayer();
+
+window.addEventListener('keydown', function (e) {
+    console.log(set_player.player_bomb_number);
+    e.preventDefault;
+    if (e.keyCode == 32 && set_player.player_bomb_number > 0) {
+        set_player.player_bomb_number--;
+        set_player.dropBomb();
+        setTimeout(function () {
+            set_player.player_bomb_number++;
+        }, 3300)
+    }
+});

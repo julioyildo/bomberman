@@ -141,8 +141,6 @@ var map = function (size, breakable_number, items, bombe_plus_one, bombe_area_bo
 
 
 
-    // var value_items = ["bombe_plus_one", "walk_fast", "bombe_area_bonus", "push_bombs"];
-
     // FUNCTION SET THE ITEMS
     this.element = function ()
     {
@@ -222,7 +220,7 @@ var map = function (size, breakable_number, items, bombe_plus_one, bombe_area_bo
 
 
 // SET THE MAP
-var create_map = new map(11,200, 18, 6, 10, 2);
+var create_map = new map(11,200, 20, 8, 10, 2);
 create_map.create_map();
 create_map.unbreakable();
 create_map.isEmpty();

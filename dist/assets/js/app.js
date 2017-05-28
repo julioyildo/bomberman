@@ -92,8 +92,6 @@ var map = function map(size, breakable_number, items, bombe_plus_one, bombe_area
         // console.log(this.is_breakable );
     };
 
-    // var value_items = ["bombe_plus_one", "walk_fast", "bombe_area_bonus", "push_bombs"];
-
     // FUNCTION SET THE ITEMS
     this.element = function () {
         for (var i = 0; i < this.items; i++) {
@@ -137,7 +135,7 @@ var map = function map(size, breakable_number, items, bombe_plus_one, bombe_area
 };
 
 // SET THE MAP
-var create_map = new map(11, 200, 18, 6, 10, 2);
+var create_map = new map(11, 200, 20, 8, 10, 2);
 create_map.create_map();
 create_map.unbreakable();
 create_map.isEmpty();
@@ -147,20 +145,26 @@ create_map.element_value();
 
 // CLASS SET THE PLAYER
 
-var player = function player(player_number) {
+var player = function player(player_number, player_bomb_number, player_bomb_range) {
     this.player_number = player_number;
+    this.player_bomb_number = player_bomb_number;
+    this.player_bomb_range = player_bomb_range;
+    this.player_bomb_pusher = false;
     this.players_positions = [{
         x: 0,
         y: 0
     }, {
         x: create_map.general_table_game.length - 1,
         y: create_map.general_table_game.length - 1
+    }, {
+        x: 0,
+        y: create_map.general_table_game.length - 1
+    }, {
+        x: create_map.general_table_game.length - 1,
+        y: 0
     }];
 
-    //Pour faire affancer le player, il faut vérifier grâce au tableau générale si les celluls de la
-    // direction souhaité sont des wall  ou de breakable.  Si ce n'est pas le cas alors il peut avancer.
-
-    // SET THE PLAYER POSITION :
+    // CREATE A PLAYER AND BOTS AND SET POSITION DEPENDING ON NUMBER OF PLAYERS:
     this.createPlayer = function () {
         for (var i = 0; i < this.player_number; i++) {
             this.player_element = document.createElement("div");
@@ -175,32 +179,42 @@ var player = function player(player_number) {
                 this.playerPosY = this.players_positions[0].y;
             } else {
                 this.player_element.classList.add("bot");
+                this.player_element.classList.add("bot");
                 this.bot_player = this.player_element;
                 this.botPosX = this.players_positions[i].x;
                 this.botPosY = this.players_positions[i].y;
             }
         }
-    }, this.movePlayer = function () {
+    },
+
+    //MOVE PLAYER
+    this.movePlayer = function () {
         var that = this;
         window.addEventListener("keydown", function (e) {
             e.preventDefault();
             if (e.keyCode == 37) {
                 if (that.playerPosY - 1 >= 0 && create_map.general_table_game[that.playerPosX][that.playerPosY - 1].breakable == null) {
-                    if (set_bomb.bombs.length > 0) {
-                        for (var i = 0; i < set_bomb.bombs.length; i++) {
-                            if (that.playerPosY - 1 == set_bomb.bombs[i][2] && that.playerPosX == set_bomb.bombs[i][1]) {
-                                if (set_bomb.bomb_pusher) {
+
+                    //COLLISION WITH BOMBS
+                    if (bombs.length > 0) {
+                        for (var i = 0; i < bombs.length; i++) {
+                            if (that.playerPosY - 1 == bombs[i][2] && that.playerPosX == bombs[i][1]) {
+
+                                //BOMBPUSHER ITEM
+                                if (this.bomb_pusher) {
                                     var k = 0;
-                                    while (k < create_map.general_table_game.length - (create_map.general_table_game.length - set_bomb.bombs[i][2] + 1) && create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2] - k].breakable == null) {
+                                    while (k < create_map.general_table_game.length - (create_map.general_table_game.length - bombs[i][2] + 1) && create_map.general_table_game[bombs[i][1]][bombs[i][2] - k].breakable == null) {
                                         k++;
                                     }
-                                    set_bomb.bombs[i][2] = set_bomb.bombs[i][2] - k - 1;
-                                    set_bomb.bombs[i][0].style.left = create_map.general_table_game[set_bomb.bombs[i][1]][set_bomb.bombs[i][2]].element.offsetLeft + "px";
+                                    bombs[i][2] = bombs[i][2] - k - 1;
+                                    bombs[i][0].style.left = create_map.general_table_game[bombs[i][1]][bombs[i][2]].element.offsetLeft + "px";
                                 }
                                 that.playerPosY += 1;
                             }
                         }
                     }
+
+                    //SPRITE ANIMATION
                     that.real_player.className = "player";
                     that.real_player.classList.add("left");
                     setTimeout(function () {
@@ -221,21 +235,27 @@ var player = function player(player_number) {
                 }
             } else if (e.keyCode == 38) {
                 if (that.playerPosX - 1 >= 0 && create_map.general_table_game[that.playerPosX - 1][that.playerPosY].breakable == null) {
-                    if (set_bomb.bombs.length > 0) {
-                        for (var _i = 0; _i < set_bomb.bombs.length; _i++) {
-                            if (that.playerPosY == set_bomb.bombs[_i][2] && that.playerPosX - 1 == set_bomb.bombs[_i][1]) {
-                                if (set_bomb.bomb_pusher) {
+
+                    //COLLISION WITH BOMBS
+                    if (bombs.length > 0) {
+                        for (var _i = 0; _i < bombs.length; _i++) {
+                            if (that.playerPosY == bombs[_i][2] && that.playerPosX - 1 == bombs[_i][1]) {
+
+                                //BOMBPUSHER ITEM
+                                if (this.bomb_pusher) {
                                     var _k = 0;
-                                    while (_k < create_map.general_table_game.length - (create_map.general_table_game.length - set_bomb.bombs[_i][1] + 1) && create_map.general_table_game[set_bomb.bombs[_i][1] - _k][set_bomb.bombs[_i][2]].breakable == null) {
+                                    while (_k < create_map.general_table_game.length - (create_map.general_table_game.length - bombs[_i][1] + 1) && create_map.general_table_game[bombs[_i][1] - _k][bombs[_i][2]].breakable == null) {
                                         _k++;
                                     }
-                                    set_bomb.bombs[_i][1] = set_bomb.bombs[_i][1] - _k - 1;
-                                    set_bomb.bombs[_i][0].style.top = create_map.general_table_game[set_bomb.bombs[_i][1]][set_bomb.bombs[_i][2]].element.offsetTop + "px";
+                                    bombs[_i][1] = bombs[_i][1] - _k - 1;
+                                    bombs[_i][0].style.top = create_map.general_table_game[bombs[_i][1]][bombs[_i][2]].element.offsetTop + "px";
                                 }
                                 that.playerPosX += 1;
                             }
                         }
                     }
+
+                    //SPRITE ANIMATION
                     that.real_player.className = "player";
                     that.real_player.classList.add("up");
                     setTimeout(function () {
@@ -256,21 +276,27 @@ var player = function player(player_number) {
                 }
             } else if (e.keyCode == 39) {
                 if (that.playerPosY + 1 < create_map.general_table_game.length && create_map.general_table_game[that.playerPosX][that.playerPosY + 1].breakable == null) {
-                    if (set_bomb.bombs.length > 0) {
-                        for (var _i2 = 0; _i2 < set_bomb.bombs.length; _i2++) {
-                            if (that.playerPosY + 1 == set_bomb.bombs[_i2][2] && that.playerPosX == set_bomb.bombs[_i2][1]) {
-                                if (set_bomb.bomb_pusher) {
+
+                    //COLLISION WITH BOMBS
+                    if (bombs.length > 0) {
+                        for (var _i2 = 0; _i2 < bombs.length; _i2++) {
+                            if (that.playerPosY + 1 == bombs[_i2][2] && that.playerPosX == bombs[_i2][1]) {
+
+                                //BOMBPUSHER ITEM
+                                if (this.bomb_pusher) {
                                     var _k2 = 0;
-                                    while (create_map.general_table_game[set_bomb.bombs[_i2][1]][set_bomb.bombs[_i2][2] + _k2].breakable == null && _k2 < create_map.general_table_game.length - set_bomb.bombs[_i2][2] - 1) {
+                                    while (create_map.general_table_game[bombs[_i2][1]][bombs[_i2][2] + _k2].breakable == null && _k2 < create_map.general_table_game.length - bombs[_i2][2] - 1) {
                                         _k2++;
                                     }
-                                    set_bomb.bombs[_i2][2] = set_bomb.bombs[_i2][2] + _k2 - 1;
-                                    set_bomb.bombs[_i2][0].style.left = create_map.general_table_game[set_bomb.bombs[_i2][1]][set_bomb.bombs[_i2][2]].element.offsetLeft + "px";
+                                    bombs[_i2][2] = bombs[_i2][2] + _k2 - 1;
+                                    bombs[_i2][0].style.left = create_map.general_table_game[bombs[_i2][1]][bombs[_i2][2]].element.offsetLeft + "px";
                                 }
                                 that.playerPosY -= 1;
                             }
                         }
                     }
+
+                    //SPRITE ANIMATION
                     that.real_player.className = "player";
                     that.real_player.classList.add("right");
                     setTimeout(function () {
@@ -291,21 +317,27 @@ var player = function player(player_number) {
                 }
             } else if (e.keyCode == 40) {
                 if (that.playerPosX + 1 < create_map.general_table_game.length && create_map.general_table_game[that.playerPosX + 1][that.playerPosY].breakable == null) {
-                    if (set_bomb.bombs.length > 0) {
-                        for (var _i3 = 0; _i3 < set_bomb.bombs.length; _i3++) {
-                            if (that.playerPosY == set_bomb.bombs[_i3][2] && that.playerPosX + 1 == set_bomb.bombs[_i3][1]) {
-                                if (set_bomb.bomb_pusher) {
+
+                    //COLLISION WITH BOMBS
+                    if (bombs.length > 0) {
+                        for (var _i3 = 0; _i3 < bombs.length; _i3++) {
+                            if (that.playerPosY == bombs[_i3][2] && that.playerPosX + 1 == bombs[_i3][1]) {
+
+                                //BOMBPUSHER ITEM
+                                if (this.bomb_pusher) {
                                     var _k3 = 0;
-                                    while (create_map.general_table_game[set_bomb.bombs[_i3][1] + _k3][set_bomb.bombs[_i3][2]].breakable == null && _k3 < create_map.general_table_game.length - set_bomb.bombs[_i3][1] - 1) {
+                                    while (create_map.general_table_game[bombs[_i3][1] + _k3][bombs[_i3][2]].breakable == null && _k3 < create_map.general_table_game.length - bombs[_i3][1] - 1) {
                                         _k3++;
                                     }
-                                    set_bomb.bombs[_i3][1] = set_bomb.bombs[_i3][1] + _k3 - 1;
-                                    set_bomb.bombs[_i3][0].style.top = create_map.general_table_game[set_bomb.bombs[_i3][1]][set_bomb.bombs[_i3][2]].element.offsetTop + "px";
+                                    bombs[_i3][1] = bombs[_i3][1] + _k3 - 1;
+                                    bombs[_i3][0].style.top = create_map.general_table_game[bombs[_i3][1]][bombs[_i3][2]].element.offsetTop + "px";
                                 }
                                 that.playerPosX -= 1;
                             }
                         }
                     }
+
+                    //SPRITE ANIMATION
                     that.real_player.className = "player";
                     that.real_player.classList.add("down");
                     setTimeout(function () {
@@ -326,325 +358,505 @@ var player = function player(player_number) {
                 }
             }
 
+            //ASSIGN NEW POSITION TO THE PLAYER
             that.real_player.style.top = create_map.general_table_game[that.playerPosX][that.playerPosY].element.offsetTop + "px";
             that.real_player.style.left = create_map.general_table_game[that.playerPosX][that.playerPosY].element.offsetLeft + "px";
         });
+    },
+
+    //DROP A BOMB BY USING THE BOMB OBJECT
+    this.dropBomb = function () {
+        var set_player_bomb = new bomb(set_player.playerPosX, set_player.playerPosY, set_player.player_bomb_number, set_player.player_bomb_range, 3);
+        set_player_bomb.putBomb();
     };
 };
 
-var set_player = new player(2);
+var set_player = new player(2, 1, 2);
 set_player.createPlayer();
 set_player.movePlayer();
 
-var bomb = function bomb(bomb_number, bomb_power, bomb_timer) {
+window.addEventListener('keydown', function (e) {
+    console.log(set_player.player_bomb_number);
+    e.preventDefault;
+    if (e.keyCode == 32 && set_player.player_bomb_number > 0) {
+        set_player.player_bomb_number--;
+        set_player.dropBomb();
+        setTimeout(function () {
+            set_player.player_bomb_number++;
+        }, 3300);
+    }
+});
+
+var bombs = [];
+
+function bomb(positionX, positionY, bomb_number, bomb_power, bomb_timer) {
+    this.positionX = positionX;
+    this.positionY = positionY;
     this.bomb_power = bomb_power;
-    this.bomb_number = bomb_number;
     this.bomb_timer = bomb_timer;
     this.bomb_pusher = false;
-    this.bombs = [];
 
+    //CREATE A BOMB
     this.putBomb = function () {
         var that = this;
-        window.addEventListener('keydown', function (e) {
-            e.preventDefault;
-            if (e.keyCode == 32 && that.bomb_number > 0) {
-                this.bomb_PosX = set_player.playerPosX;
-                this.bomb_PosY = set_player.playerPosY;
-                this.bomb = document.createElement('div');
-                this.bomb.style.top = create_map.general_table_game[this.bomb_PosX][this.bomb_PosY].element.offsetTop + "px";
-                this.bomb.style.left = create_map.general_table_game[this.bomb_PosX][this.bomb_PosY].element.offsetLeft + 'px';
-                this.bomb.classList.add("bomb");
-                this.bomb.classList.add("bomb3");
-                document.querySelector(".table").appendChild(this.bomb);
-                that.bombs.push([this.bomb, this.bomb_PosX, this.bomb_PosY, that.bomb_timer, false, false, false, false, false, false, false, false]);
-                that.bomb_number--;
-                that.explodeBomb(that.bombs.length - 1);
-            }
-        });
+        this.bomb_PosX = this.positionX;
+        this.bomb_PosY = this.positionY;
+        this.bomb = document.createElement('div');
+        this.bomb.style.top = create_map.general_table_game[this.bomb_PosX][this.bomb_PosY].element.offsetTop + "px";
+        this.bomb.style.left = create_map.general_table_game[this.bomb_PosX][this.bomb_PosY].element.offsetLeft + 'px';
+        this.bomb.classList.add("bomb");
+        this.bomb.classList.add("bomb3");
+        document.querySelector(".table").appendChild(this.bomb);
+
+        //STOCK IT IN BOMBS ARRAY, FALSE ARE HERE TO TEST IF THERE ARE UNBREAKABLE OR BREAKABLE BLOCKS ON THE PATH OF THE BOMB RANGE
+        bombs.push([this.bomb, this.bomb_PosX, this.bomb_PosY, this.bomb_timer, this.bomb_power, false, false, false, false, false, false, false, false]);
+        that.explodeBomb(bombs.length - 1);
     }, this.explodeBomb = function (i) {
+
+        //BOMB IS EXPLODING AFTER THE END OF THE SETINTERVAL
         var that = this;
         var interval = setInterval(function () {
-            that.bombs[i][3]--;
-            if (that.bombs[i][3] == 2) {
-                that.bombs[i][0].classList.remove("bomb3");
-                that.bombs[i][0].classList.add("bomb2");
-            } else if (that.bombs[i][3] == 1) {
-                that.bombs[i][0].classList.remove("bomb2");
-                that.bombs[i][0].classList.add("bomb1");
-            } else if (that.bombs[i][3] == 0) {
-                that.bombs[i][0].classList.remove("bomb1");
-                that.bombs[i][0].classList.add("bomb0");
+            bombs[i][3]--;
+            if (bombs[i][3] == 2) {
+                bombs[i][0].classList.remove("bomb3");
+                bombs[i][0].classList.add("bomb2");
+            } else if (bombs[i][3] == 1) {
+                bombs[i][0].classList.remove("bomb2");
+                bombs[i][0].classList.add("bomb1");
+            } else if (bombs[i][3] == 0) {
+                bombs[i][0].classList.remove("bomb1");
+                bombs[i][0].classList.add("bomb0");
 
-                setTimeout(function () {
-                    for (var j = 0; j < that.bomb_power; j++) {
+                var _loop = function _loop(j) {
 
-                        if (that.bombs[i][1] + j < create_map.general_table_game.length && create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].breakable && !that.bombs[i][5] && !that.bombs[i][9]) {
-                            create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].breakable = null;
-                            create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].element.classList.remove("breakable");
-                            if (create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].item) {
-                                create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].element.classList.add(create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].value_item);
+                    //TEST CELLS TOUCHED BY EXPLOSION
+
+                    if (bombs[i][1] + j < create_map.general_table_game.length && !bombs[i][5] && !bombs[i][9]) {
+                        if (j > 0) {
+                            create_map.general_table_game[bombs[i][1] + j][bombs[i][2]].element.classList.add("verticalexp");
+                        }
+                        if (create_map.general_table_game[bombs[i][1] + j][bombs[i][2]].breakable) {
+                            create_map.general_table_game[bombs[i][1] + j][bombs[i][2]].breakable = null;
+                            create_map.general_table_game[bombs[i][1] + j][bombs[i][2]].element.classList.remove("breakable");
+                            if (create_map.general_table_game[bombs[i][1] + j][bombs[i][2]].item) {
+                                create_map.general_table_game[bombs[i][1] + j][bombs[i][2]].element.classList.add(create_map.general_table_game[bombs[i][1] + j][bombs[i][2]].value_item);
                             }
-                            that.bombs[i][5] = true;
-                        } else if (that.bombs[i][1] + j < create_map.general_table_game.length && create_map.general_table_game[that.bombs[i][1] + j][that.bombs[i][2]].breakable == false) {
-                            that.bombs[i][9] = true;
-                        }
-
-                        if (that.bombs[i][1] - j >= 0 && create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].breakable && !that.bombs[i][6] && !that.bombs[i][10]) {
-                            create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].breakable = null;
-                            create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].element.classList.remove("breakable");
-                            if (create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].item) {
-                                create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].element.classList.add(create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].value_item);
-                            }
-                            that.bombs[i][6] = true;
-                        } else if (that.bombs[i][1] - j >= 0 && create_map.general_table_game[that.bombs[i][1] - j][that.bombs[i][2]].breakable == false) {
-                            that.bombs[i][10] = true;
-                        }
-
-                        if (that.bombs[i][2] + j < create_map.general_table_game.length && create_map.general_table_game[this.bomb_PosX][that.bombs[i][2] + j].breakable && !that.bombs[i][7] && !that.bombs[i][11]) {
-                            create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] + j].breakable = null;
-                            create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] + j].element.classList.remove("breakable");
-                            if (create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] + j].item) {
-                                create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] + j].element.classList.add(create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] + j].value_item);
-                            }
-                            that.bombs[i][7] = true;
-                        } else if (that.bombs[i][2] + j < create_map.general_table_game.length && create_map.general_table_game[this.bomb_PosX][that.bombs[i][2] + j].breakable == false) {
-                            that.bombs[i][11] = true;
-                        }
-
-                        if (that.bombs[i][2] - j >= 0 && create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].breakable && !that.bombs[i][8] && !that.bombs[i][12]) {
-                            create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].breakable = null;
-                            create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].element.classList.remove("breakable");
-                            if (create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].item) {
-                                create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].element.classList.add(create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].value_item);
-                            }
-                            that.bombs[i][8] = true;
-                        } else if (that.bombs[i][2] - j >= 0 && create_map.general_table_game[that.bombs[i][1]][that.bombs[i][2] - j].breakable == false) {
-                            that.bombs[i][12] = true;
-                        }
-
-                        if (that.bombs[i][1] + j == set_player.playerPosX && that.bombs[i][2] == set_player.playerPosY && !that.bombs[i][5] && !that.bombs[i][9]) {
-                            window.alert("You lost !");
-                            location.reload();
-                        }
-                        if (that.bombs[i][1] - j == set_player.playerPosX && that.bombs[i][2] == set_player.playerPosY && !that.bombs[i][6] && !that.bombs[i][10]) {
-                            window.alert("You lost !");
-                            location.reload();
-                        }
-                        if (that.bombs[i][1] == set_player.playerPosX && that.bombs[i][2] + j == set_player.playerPosY && !that.bombs[i][7] && !that.bombs[i][11]) {
-                            window.alert("You lost !");
-                            location.reload();
-                        }
-
-                        if (that.bombs[i][1] == set_player.playerPosX && that.bombs[i][2] - j == set_player.playerPosY && !that.bombs[i][8] && !that.bombs[i][12]) {
-                            window.alert("You lost !");
-                            location.reload();
-                        }
-
-                        if (that.bombs[i][1] + j == set_player.botPosX && that.bombs[i][2] == set_player.botPosY && !that.bombs[i][5] && !that.bombs[i][9]) {
-                            window.alert("You win !");
-                            location.reload();
-                        }
-                        if (that.bombs[i][1] - j == set_player.botPosX && that.bombs[i][2] == set_player.botPosY && !that.bombs[i][6] && !that.bombs[i][10]) {
-                            window.alert("You win !");
-                            location.reload();
-                        }
-                        if (that.bombs[i][1] == set_player.botPosX && that.bombs[i][2] + j == set_player.botPosY && !that.bombs[i][7] && !that.bombs[i][11]) {
-                            window.alert("You win !");
-                            location.reload();
-                        }
-
-                        if (that.bombs[i][1] == set_player.botPosX && that.bombs[i][2] - j == set_player.botPosY && !that.bombs[i][8] && !that.bombs[i][12]) {
-                            window.alert("You win !");
-                            location.reload();
+                            bombs[i][5] = true;
+                        } else if (bombs[i][1] + j < create_map.general_table_game.length && create_map.general_table_game[bombs[i][1] + j][bombs[i][2]].breakable == false) {
+                            bombs[i][9] = true;
                         }
                     }
 
-                    that.bomb_number++;
-                    that.bombs[i][0].remove();
-                    that.bombs[i] = [];
+                    //TEST CELLS TOUCHED BY EXPLOSION
+
+                    if (bombs[i][1] - j >= 0 && !bombs[i][6] && !bombs[i][10]) {
+                        if (j > 0) {
+                            create_map.general_table_game[bombs[i][1] - j][bombs[i][2]].element.classList.add("verticalexp");
+                        }
+                        if (create_map.general_table_game[bombs[i][1] - j][bombs[i][2]].breakable) {
+                            create_map.general_table_game[bombs[i][1] - j][bombs[i][2]].breakable = null;
+                            create_map.general_table_game[bombs[i][1] - j][bombs[i][2]].element.classList.remove("breakable");
+
+                            if (create_map.general_table_game[bombs[i][1] - j][bombs[i][2]].item) {
+                                create_map.general_table_game[bombs[i][1] - j][bombs[i][2]].element.classList.add(create_map.general_table_game[bombs[i][1] - j][bombs[i][2]].value_item);
+                            }
+                            bombs[i][6] = true;
+                        } else if (bombs[i][1] - j >= 0 && create_map.general_table_game[bombs[i][1] - j][bombs[i][2]].breakable == false) {
+                            bombs[i][10] = true;
+                        }
+                    }
+
+                    //TEST CELLS TOUCHED BY EXPLOSION
+
+                    if (bombs[i][2] + j < create_map.general_table_game.length && !bombs[i][7] && !bombs[i][11]) {
+                        if (j > 0) {
+                            create_map.general_table_game[bombs[i][1]][bombs[i][2] + j].element.classList.add("horizontalexp");
+                        }
+                        if (create_map.general_table_game[bombs[i][1]][bombs[i][2] + j].breakable) {
+                            create_map.general_table_game[bombs[i][1]][bombs[i][2] + j].breakable = null;
+                            create_map.general_table_game[bombs[i][1]][bombs[i][2] + j].element.classList.remove("breakable");
+
+                            if (create_map.general_table_game[bombs[i][1]][bombs[i][2] + j].item) {
+                                create_map.general_table_game[bombs[i][1]][bombs[i][2] + j].element.classList.add(create_map.general_table_game[bombs[i][1]][bombs[i][2] + j].value_item);
+                            }
+                            bombs[i][7] = true;
+                        } else if (bombs[i][2] + j < create_map.general_table_game.length && create_map.general_table_game[bombs[i][1]][bombs[i][2] + j].breakable == false) {
+                            bombs[i][11] = true;
+                        }
+                    }
+
+                    //TEST CELLS TOUCHED BY EXPLOSION
+
+                    if (bombs[i][2] - j >= 0 && !bombs[i][8] && !bombs[i][12]) {
+                        if (j > 0) {
+                            create_map.general_table_game[bombs[i][1]][bombs[i][2] - j].element.classList.add("horizontalexp");
+                        }
+                        if (create_map.general_table_game[bombs[i][1]][bombs[i][2] - j].breakable) {
+                            create_map.general_table_game[bombs[i][1]][bombs[i][2] - j].breakable = null;
+                            create_map.general_table_game[bombs[i][1]][bombs[i][2] - j].element.classList.remove("breakable");
+                            if (create_map.general_table_game[bombs[i][1]][bombs[i][2] - j].item) {
+                                create_map.general_table_game[bombs[i][1]][bombs[i][2] - j].element.classList.add(create_map.general_table_game[bombs[i][1]][bombs[i][2] - j].value_item);
+                            }
+                            bombs[i][8] = true;
+                        } else if (bombs[i][2] - j >= 0 && create_map.general_table_game[bombs[i][1]][bombs[i][2] - j].breakable == false) {
+                            bombs[i][12] = true;
+                        }
+                    }
+
+                    //TEST IF BOMBE RANGE IS TOUCHING PLAYER
+                    if (bombs[i][1] + j == set_player.playerPosX && bombs[i][2] == set_player.playerPosY && !bombs[i][5] && !bombs[i][9]) {
+                        window.alert("You lost !");
+                        location.reload();
+                    }
+                    if (bombs[i][1] - j == set_player.playerPosX && bombs[i][2] == set_player.playerPosY && !bombs[i][6] && !bombs[i][10]) {
+                        window.alert("You lost !");
+                        location.reload();
+                    }
+                    if (bombs[i][1] == set_player.playerPosX && bombs[i][2] + j == set_player.playerPosY && !bombs[i][7] && !bombs[i][11]) {
+                        window.alert("You lost !");
+                        location.reload();
+                    }
+
+                    if (bombs[i][1] == set_player.playerPosX && bombs[i][2] - j == set_player.playerPosY && !bombs[i][8] && !bombs[i][12]) {
+                        window.alert("You lost !");
+                        location.reload();
+                    }
+
+                    //TEST IF BOMBE RANGE IS TOUCHING PLAYER
+                    if (bombs[i][1] + j == set_player.botPosX && bombs[i][2] == set_player.botPosY && !bombs[i][5] && !bombs[i][9]) {
+                        window.alert("You win !");
+                        location.reload();
+                    }
+                    if (bombs[i][1] - j == set_player.botPosX && bombs[i][2] == set_player.botPosY && !bombs[i][6] && !bombs[i][10]) {
+                        window.alert("You win !");
+                        location.reload();
+                    }
+                    if (bombs[i][1] == set_player.botPosX && bombs[i][2] + j == set_player.botPosY && !bombs[i][7] && !bombs[i][11]) {
+                        window.alert("You win !");
+                        location.reload();
+                    }
+
+                    if (bombs[i][1] == set_player.botPosX && bombs[i][2] - j == set_player.botPosY && !bombs[i][8] && !bombs[i][12]) {
+                        window.alert("You win !");
+                        location.reload();
+                    }
+
+                    //REMOVE EXPLOSION CLASS AROUND THE BOMB
+                    setTimeout(function () {
+                        if (bombs[i][1] + j < create_map.general_table_game.length) {
+                            create_map.general_table_game[bombs[i][1] + j][bombs[i][2]].element.classList.remove("verticalexp");
+                        }
+                        if (bombs[i][1] - j >= 0) {
+                            create_map.general_table_game[bombs[i][1] - j][bombs[i][2]].element.classList.remove("verticalexp");
+                        }
+                        if (bombs[i][2] + j < create_map.general_table_game.length) {
+                            create_map.general_table_game[bombs[i][1]][bombs[i][2] + j].element.classList.remove("horizontalexp");
+                        }
+                        if (bombs[i][2] - j >= 0) {
+                            create_map.general_table_game[bombs[i][1]][bombs[i][2] - j].element.classList.remove("horizontalexp");
+                        }
+                    }, 300);
+                };
+
+                for (var j = 0; j < bombs[i][4]; j++) {
+                    _loop(j);
+                }
+
+                //REMOVE BOMB FROM THE DOM AND CLEAR ARRAY
+                setTimeout(function () {
+                    bombs[i][0].remove();
+                    bombs[i] = [];
                 }, 300);
+
                 clearInterval(interval);
             }
         }, bomb_timer / 3 * 1000);
     };
-};
+}
 
-var set_bomb = new bomb(1, 2, 3);
-set_bomb.putBomb();
+var bot = function bot(bot_bomb_number, bot_bomb_range) {
 
-var bot = function bot() {
+    this.bot_bomb_number = bot_bomb_number;
+    this.bot_bomb_range = bot_bomb_range;
 
-    var findShortestPath = function findShortestPath(startCoordinates, grid) {
-        var distanceFromTop = startCoordinates[0];
-        var distanceFromLeft = startCoordinates[1];
+    this.safe = true;
+    this.cellsToMove = [];
+    this.path = [];
+    this.visitedLeft = false;
+    this.visitedUp = false;
+    this.visitedRight = false;
+    this.visitedDown = false;
+    this.path.push([set_player.botPosX, set_player.botPosY]);
 
-        // Each "location" will store its coordinates
-        // and the shortest path required to arrive there
-        var location = {
-            distanceFromTop: distanceFromTop,
-            distanceFromLeft: distanceFromLeft,
-            path: [],
-            status: 'Start'
-        };
+    //RANDOM FUNCTION
+    this.random = function (max) {
+        return Math.floor(Math.random() * max);
+    },
 
-        // Initialize the queue with the start location already inside
-        var queue = [location];
-
-        // Loop through the grid searching for the goal
-        while (queue.length > 0) {
-            // Take the first location off the queue
-            var currentLocation = queue.shift();
-
-            // Explore North
-            var newLocation = exploreInDirection(currentLocation, 'North', grid);
-            if (newLocation.status === 'Goal') {
-                return newLocation.path;
-            } else if (newLocation.status === 'Valid') {
-                queue.push(newLocation);
+    //TEST CELLS AROUND WHEN SAFE AND REGISTER POSITIONS BOT CAN GO TO
+    this.testAroundCells = function () {
+        if (set_player.botPosY - 1 >= 0 && create_map.general_table_game[set_player.botPosX][set_player.botPosY - 1].breakable == null) {
+            for (var i = 0; i < this.path.length; i++) {
+                if (set_player.botPosY - 1 == this.path[i][1] && set_player.botPosX == this.path[i][0]) {
+                    this.visitedLeft = true;
+                }
             }
-
-            // Explore East
-            var newLocation = exploreInDirection(currentLocation, 'East', grid);
-            if (newLocation.status === 'Goal') {
-                return newLocation.path;
-            } else if (newLocation.status === 'Valid') {
-                queue.push(newLocation);
-            }
-
-            // Explore South
-            var newLocation = exploreInDirection(currentLocation, 'South', grid);
-            if (newLocation.status === 'Goal') {
-                return newLocation.path;
-            } else if (newLocation.status === 'Valid') {
-                queue.push(newLocation);
-            }
-
-            // Explore West
-            var newLocation = exploreInDirection(currentLocation, 'West', grid);
-            if (newLocation.status === 'Goal') {
-                return newLocation.path;
-            } else if (newLocation.status === 'Valid') {
-                queue.push(newLocation);
-            }
+            if (!this.visitedLeft) this.cellsToMove.push("left");
         }
 
-        // No valid path found
-        return false;
-    };
+        if (set_player.botPosX - 1 >= 0 && create_map.general_table_game[set_player.botPosX - 1][set_player.botPosY].breakable == null) {
+            for (var _i4 = 0; _i4 < this.path.length; _i4++) {
+                if (set_player.botPosY == this.path[_i4][1] && set_player.botPosX - 1 == this.path[_i4][0]) {
+                    this.visitedUp = true;
+                }
+            }
+            if (!this.visitedUp) this.cellsToMove.push("up");
+        }
 
-    // This function will check a location's status
-    // (a location is "valid" if it is on the grid, is not an "obstacle",
-    // and has not yet been visited by our algorithm)
-    // Returns "Valid", "Invalid", "Blocked", or "Goal"
-    var locationStatus = function locationStatus(location, grid) {
-        var gridSize = grid.length;
-        var dft = location.distanceFromTop;
-        var dfl = location.distanceFromLeft;
+        if (set_player.botPosY + 1 < create_map.general_table_game.length && create_map.general_table_game[set_player.botPosX][set_player.botPosY + 1].breakable == null) {
 
-        if (location.distanceFromLeft < 0 || location.distanceFromLeft >= gridSize || location.distanceFromTop < 0 || location.distanceFromTop >= gridSize) {
+            for (var _i5 = 0; _i5 < this.path.length; _i5++) {
+                if (set_player.botPosY + 1 == this.path[_i5][1] && set_player.botPosX == this.path[_i5][0]) {
+                    this.visitedRight = true;
+                }
+            }
+            if (!this.visitedRight) this.cellsToMove.push("right");
+        }
 
-            // location is not on the grid--return false
-            return 'Invalid';
-        } else if (grid[dft][dfl] === 'Goal') {
-            return 'Goal';
-        } else if (grid[dft][dfl] !== 'Empty') {
-            // location is either an obstacle or has been visited
-            return 'Blocked';
+        if (set_player.botPosX + 1 < create_map.general_table_game.length && create_map.general_table_game[set_player.botPosX + 1][set_player.botPosY].breakable == null) {
+
+            for (var _i6 = 0; _i6 < this.path.length; _i6++) {
+                if (set_player.botPosY == this.path[_i6][1] && set_player.botPosX + 1 == this.path[_i6][0]) {
+                    this.visitedDown = true;
+                }
+            }
+            if (!this.visitedDown) this.cellsToMove.push("down");
+        }
+
+        this.moveToCell(this.cellsToMove);
+    },
+
+    //WHEN NOT SAFE, TEST CELLS AROUND AND REGISTER POSITIONS BOT CAN GO TO
+    this.dodgeBombs = function () {
+        if (bombs.length > 0) {
+            this.path = [];
+            this.path.push([set_player.botPosX, set_player.botPosY]);
+            for (var k = 0; k < bombs.length; k++) {
+                for (var l = 0; l < bombs[k][4]; l++) {
+                    if (bombs[k][1] - l == set_player.botPosX && bombs[k][2] == set_player.botPosY) {
+                        this.safe = false;
+                        if (set_player.botPosY - 1 >= 0 && create_map.general_table_game[set_player.botPosX][set_player.botPosY - 1].breakable == null) {
+                            this.cellsToMove.push("left");
+                        }
+                        if (set_player.botPosX - 1 >= 0 && create_map.general_table_game[set_player.botPosX - 1][set_player.botPosY].breakable == null) {
+                            this.cellsToMove.push("up");
+                        }
+                        if (set_player.botPosY + 1 < create_map.general_table_game.length && create_map.general_table_game[set_player.botPosX][set_player.botPosY + 1].breakable == null) {
+                            this.cellsToMove.push("right");
+                        }
+                        if (set_player.botPosX + 1 < create_map.general_table_game.length && create_map.general_table_game[set_player.botPosX + 1][set_player.botPosY].breakable == null) {
+                            this.cellsToMove.push("down");
+                        }
+                    }
+                    if (bombs[k][1] + l == set_player.botPosX && bombs[k][2] == set_player.botPosY) {
+                        this.safe = false;
+                        if (set_player.botPosY - 1 >= 0 && create_map.general_table_game[set_player.botPosX][set_player.botPosY - 1].breakable == null) {
+                            this.cellsToMove.push("left");
+                        }
+                        if (set_player.botPosX - 1 >= 0 && create_map.general_table_game[set_player.botPosX - 1][set_player.botPosY].breakable == null) {
+                            this.cellsToMove.push("up");
+                        }
+                        if (set_player.botPosY + 1 < create_map.general_table_game.length && create_map.general_table_game[set_player.botPosX][set_player.botPosY + 1].breakable == null) {
+                            this.cellsToMove.push("right");
+                        }
+                        if (set_player.botPosX + 1 < create_map.general_table_game.length && create_map.general_table_game[set_player.botPosX + 1][set_player.botPosY].breakable == null) {
+                            this.cellsToMove.push("down");
+                        }
+                    }
+                    if (bombs[k][1] == set_player.botPosX && bombs[k][2] - l == set_player.botPosY) {
+                        this.safe = false;
+                        if (set_player.botPosY - 1 >= 0 && create_map.general_table_game[set_player.botPosX][set_player.botPosY - 1].breakable == null) {
+                            this.cellsToMove.push("left");
+                        }
+                        if (set_player.botPosX - 1 >= 0 && create_map.general_table_game[set_player.botPosX - 1][set_player.botPosY].breakable == null) {
+                            this.cellsToMove.push("up");
+                        }
+                        if (set_player.botPosY + 1 < create_map.general_table_game.length && create_map.general_table_game[set_player.botPosX][set_player.botPosY + 1].breakable == null) {
+                            this.cellsToMove.push("right");
+                        }
+                        if (set_player.botPosX + 1 < create_map.general_table_game.length && create_map.general_table_game[set_player.botPosX + 1][set_player.botPosY].breakable == null) {
+                            this.cellsToMove.push("down");
+                        }
+                    }
+                    if (bombs[k][1] == set_player.botPosX && bombs[k][2] + l == set_player.botPosY) {
+                        this.safe = false;
+                        if (set_player.botPosY - 1 >= 0 && create_map.general_table_game[set_player.botPosX][set_player.botPosY - 1].breakable == null) {
+                            this.cellsToMove.push("left");
+                        }
+                        if (set_player.botPosX - 1 >= 0 && create_map.general_table_game[set_player.botPosX - 1][set_player.botPosY].breakable == null) {
+                            this.cellsToMove.push("up");
+                        }
+                        if (set_player.botPosY + 1 < create_map.general_table_game.length && create_map.general_table_game[set_player.botPosX][set_player.botPosY + 1].breakable == null) {
+                            this.cellsToMove.push("right");
+                        }
+                        if (set_player.botPosX + 1 < create_map.general_table_game.length && create_map.general_table_game[set_player.botPosX + 1][set_player.botPosY].breakable == null) {
+                            this.cellsToMove.push("down");
+                        }
+                    }
+                }
+            }
+        }
+        this.moveToCell(this.cellsToMove);
+    },
+
+    //MOVE BOT TO POSITION ACCORDING TO RANDOM FUNCTION
+    this.moveToCell = function (directions) {
+        var randomized_direction = directions[this.random(directions.length)];
+        if (directions.length > 0) {
+            if (randomized_direction == "left") {
+                set_player.bot_player.className = "bot";
+                set_player.bot_player.classList.add("left");
+                setTimeout(function () {
+                    set_player.bot_player.classList.add("left1");
+                }, 25);
+                setTimeout(function () {
+                    set_player.bot_player.classList.remove("left1");
+                    set_player.bot_player.classList.add("left2");
+                }, 50);
+                setTimeout(function () {
+                    set_player.bot_player.classList.remove("left2");
+                    set_player.bot_player.classList.add("left3");
+                }, 75);
+                setTimeout(function () {
+                    set_player.bot_player.classList.remove("left3");
+                }, 100);
+                set_player.botPosY -= 1;
+            } else if (randomized_direction == "right") {
+                set_player.bot_player.className = "bot";
+                set_player.bot_player.classList.add("right");
+                setTimeout(function () {
+                    set_player.bot_player.classList.add("right1");
+                }, 25);
+                setTimeout(function () {
+                    set_player.bot_player.classList.remove("right1");
+                    set_player.bot_player.classList.add("right2");
+                }, 50);
+                setTimeout(function () {
+                    set_player.bot_player.classList.remove("right2");
+                    set_player.bot_player.classList.add("right3");
+                }, 75);
+                setTimeout(function () {
+                    set_player.bot_player.classList.remove("right3");
+                }, 100);
+                set_player.botPosY += 1;
+            } else if (randomized_direction == "down") {
+                set_player.bot_player.className = "bot";
+                set_player.bot_player.classList.add("down");
+                setTimeout(function () {
+                    set_player.bot_player.classList.add("down1");
+                }, 25);
+                setTimeout(function () {
+                    set_player.bot_player.classList.remove("down1");
+                    set_player.bot_player.classList.add("down2");
+                }, 50);
+                setTimeout(function () {
+                    set_player.bot_player.classList.remove("down2");
+                    set_player.bot_player.classList.add("down3");
+                }, 75);
+                setTimeout(function () {
+                    set_player.bot_player.classList.remove("down3");
+                }, 100);
+                set_player.botPosX += 1;
+            } else if (randomized_direction == "up") {
+                set_player.bot_player.className = "bot";
+                set_player.bot_player.classList.add("up");
+                setTimeout(function () {
+                    set_player.bot_player.classList.add("up1");
+                }, 25);
+                setTimeout(function () {
+                    set_player.bot_player.classList.remove("up1");
+                    set_player.bot_player.classList.add("up2");
+                }, 50);
+                setTimeout(function () {
+                    set_player.bot_player.classList.remove("up2");
+                    set_player.bot_player.classList.add("up3");
+                }, 75);
+                setTimeout(function () {
+                    set_player.bot_player.classList.remove("up3");
+                }, 100);
+                set_player.botPosX -= 1;
+            }
+
+            set_player.bot_player.style.top = create_map.general_table_game[set_player.botPosX][set_player.botPosY].element.offsetTop + "px";
+            set_player.bot_player.style.left = create_map.general_table_game[set_player.botPosX][set_player.botPosY].element.offsetLeft + "px";
+
+            this.cellsToMove = [];
+            this.path.push([set_player.botPosX, set_player.botPosY]);
+            this.visitedLeft = false;
+            this.visitedUp = false;
+            this.visitedRight = false;
+            this.visitedDown = false;
         } else {
-            return 'Valid';
+            var set_bot_bomb = new bomb(set_player.botPosX, set_player.botPosY, this.bot_bomb_number, this.bot_bomb_range, 3);
+            if (this.bot_bomb_number) {
+                this.bot_bomb_number--;
+                set_bot_bomb.putBomb();
+            }
+            this.safe = false;
+            this.dodgeBombs();
+            var that = this;
+            setTimeout(function () {
+                that.bot_bomb_number++;
+                that.safe = true;
+            }, 3300);
         }
     };
-
-    // Explores the grid from the given location in the given
-    // direction
-    var exploreInDirection = function exploreInDirection(currentLocation, direction, grid) {
-        var newPath = currentLocation.path.slice();
-        newPath.push(direction);
-
-        var dft = currentLocation.distanceFromTop;
-        var dfl = currentLocation.distanceFromLeft;
-
-        if (direction === 'North') {
-            dft -= 1;
-        } else if (direction === 'East') {
-            dfl += 1;
-        } else if (direction === 'South') {
-            dft += 1;
-        } else if (direction === 'West') {
-            dfl -= 1;
-        }
-
-        var newLocation = {
-            distanceFromTop: dft,
-            distanceFromLeft: dfl,
-            path: newPath,
-            status: 'Unknown'
-        };
-        newLocation.status = locationStatus(newLocation, grid);
-
-        // If this new location is valid, mark it as 'Visited'
-        if (newLocation.status === 'Valid') {
-            grid[newLocation.distanceFromTop][newLocation.distanceFromLeft].value_bot = 'Visited';
-        }
-
-        return newLocation;
-    };
-
-    console.log(findShortestPath([set_player.botPosX, set_player.botPosY], create_map.general_table_game));
-
-    //    this.botAction = function () {
-    //        var that = this;
-    //        var interval = setInterval(function () {
-    //            var i = 0;
-    //            var shortestPath = that.findShortestPath();
-    //            console.log(shortestPath);
-    //            if (shortestPath.length > 0) {
-    //                if (i < shortestPath.length) {
-    //                    console.log(set_player.botPosX, set_player.botPosY);
-    //                    if (shortestPath[i] == "North") {
-    //                        set_player.botPosX -= 1;
-    //                    } else if (shortestPath[i] == "East") {
-    //                        set_player.botPosY += 1;
-    //                    } else if (shortestPath[i] == "South") {
-    //                        set_player.botPosX += 1;
-    //                    } else if (shortestPath[i] == "West") {
-    //                        set_player.botPosY -= 1;
-    //                    }
-    //
-    //                    set_player.bot_player.style.top = create_map.general_table_game[set_player.botPosX][set_player.botPosY].element.offsetTop + "px";
-    //                    set_player.bot_player.style.left = create_map.general_table_game[set_player.botPosX][set_player.botPosY].element.offsetLeft + "px";
-    //                }
-    //
-    //            }
-    //            i++;
-    //            if(!shortestPath){
-    //                console.log("yo");
-    //            }
-    //        }, 500)
-    //    }
 };
 
-var set_bot = new bot();
-//set_bot.botAction();
+var set_bot = new bot(1, 2);
+setInterval(function () {
+    console.log(set_bot.safe);
+    if (set_bot.safe) {
+        set_bot.testAroundCells();
+    } else if (!set_bot.safe) {
+        set_bot.dodgeBombs();
+    }
+}, 500);
 
 var items = function items() {
-    this.playerItems = function () {
+
+    //ITEMS ARE ACTIVATED WHEN PLAYER AND BOT ARE OVER THEM
+    this.itemsActivation = function () {
         var that = this;
         window.addEventListener('keydown', function (e) {
             if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].item) {
                 if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "bomb_area_bonus") {
-                    set_bomb.bomb_power++;
+                    set_player.player_bomb_power++;
                 } else if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "push_bombs") {
-                    set_bomb.bomb_pusher = true;
+                    set_player.player_bomb_pusher = true;
                 } else if (create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].value_item == "more_bombs") {
-                    set_bomb.bomb_number++;
+                    set_player.player_bomb_number++;
                 }
                 create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].item = false;
                 create_map.general_table_game[set_player.playerPosX][set_player.playerPosY].element.className = "cell";
             }
         });
+
+        setInterval(function () {
+            if (create_map.general_table_game[set_player.botPosX][set_player.botPosY].item) {
+                if (create_map.general_table_game[set_player.botPosX][set_player.botPosY].value_item == "bomb_area_bonus") {
+                    set_bot.bot_bomb_power++;
+                } else if (create_map.general_table_game[set_player.botPosX][set_player.botPosY].value_item == "push_bombs") {
+                    set_bot.bot_bomb_pusher = true;
+                } else if (create_map.general_table_game[set_player.botPosX][set_player.botPosY].value_item == "more_bombs") {
+                    set_bot.bot_bomb_number++;
+                }
+                create_map.general_table_game[set_player.botPosX][set_player.botPosY].item = false;
+                create_map.general_table_game[set_player.botPosX][set_player.botPosY].element.className = "cell";
+            }
+        }, 50);
     };
 };
 
 var set_items = new items();
-set_items.playerItems();
+set_items.itemsActivation();
