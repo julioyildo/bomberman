@@ -1,9 +1,9 @@
 // CLASS SET THE PLAYER
 
-var player = function (player_number, player_bomb_number, player_bomb_range) {
+var player = function (player_number, player_bomb_number, player_bomb_power) {
     this.player_number = player_number;
     this.player_bomb_number = player_bomb_number;
-    this.player_bomb_range = player_bomb_range;
+    this.player_bomb_power = player_bomb_power;
     this.player_bomb_pusher = false;
     this.players_positions = [{
         x: 0,
@@ -223,7 +223,7 @@ var player = function (player_number, player_bomb_number, player_bomb_range) {
 
         //DROP A BOMB BY USING THE BOMB OBJECT
         this.dropBomb = function () {
-            var set_player_bomb = new bomb(set_player.playerPosX, set_player.playerPosY, set_player.player_bomb_number, set_player.player_bomb_range, 3);
+            var set_player_bomb = new bomb(set_player.playerPosX, set_player.playerPosY, set_player.player_bomb_number, set_player.player_bomb_power, 3);
             set_player_bomb.putBomb();
         }
 }
