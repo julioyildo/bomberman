@@ -152,7 +152,6 @@ var map = function (size, breakable_number, items, bombe_plus_one, bombe_area_bo
             if (!this.is_breakable[random_item].item)
             {
                 this.is_breakable[random_item].item = true;
-                this.is_breakable[random_item].element.classList.add('item');
                 this.is_item.push(this.is_breakable[random_item]);
 
             }

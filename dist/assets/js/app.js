@@ -100,7 +100,6 @@ var map = function map(size, breakable_number, items, bombe_plus_one, bombe_area
 
             if (!this.is_breakable[random_item].item) {
                 this.is_breakable[random_item].item = true;
-                this.is_breakable[random_item].element.classList.add('item');
                 this.is_item.push(this.is_breakable[random_item]);
             } else {
                 i--;
@@ -149,7 +148,7 @@ var player = function player(player_number, player_bomb_number, player_bomb_powe
     this.player_number = player_number;
     this.player_bomb_number = player_bomb_number;
     this.player_bomb_power = player_bomb_power;
-    this.player_bomb_pusher = false;
+    this.player_bomb_pusher = true;
     this.players_positions = [{
         x: 0,
         y: 0
@@ -371,7 +370,7 @@ var player = function player(player_number, player_bomb_number, player_bomb_powe
     };
 };
 
-var set_player = new player(2, 1, 2);
+var set_player = new player(2, 2, 2);
 set_player.createPlayer();
 set_player.movePlayer();
 
@@ -815,7 +814,6 @@ var bot = function bot(bot_bomb_number, bot_bomb_range) {
 
 var set_bot = new bot(1, 2);
 setInterval(function () {
-    console.log(set_bot.safe);
     if (set_bot.safe) {
         set_bot.testAroundCells();
     } else if (!set_bot.safe) {

@@ -250,7 +250,6 @@ var bot = function (bot_bomb_number, bot_bomb_range) {
 
 var set_bot = new bot(1, 2);
 setInterval(function () {
-    console.log(set_bot.safe);
     if (set_bot.safe) {
         set_bot.testAroundCells();
     } else if (!set_bot.safe) {
