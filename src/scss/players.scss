@@ -1,0 +1,146 @@
+
+.bomberman-map .table .player {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: 1;
+    background-image: url(../img/macron.png);
+    transition: left 0.1s linear, top 0.1s linear;
+}
+
+.bomberman-map .table .player.down {
+    background-position: 0px 0px;
+}
+
+.bomberman-map .table .player.down.down1 {
+    background-position: 50px 0px;
+}
+
+.bomberman-map .table .player.down.down2 {
+    background-position: 100px 0px;
+}
+
+.bomberman-map .table .player.down.down3 {
+    background-position: 150px 0px;
+}
+
+.bomberman-map .table .player.left {
+    background-position: 0px 150px;
+}
+
+.bomberman-map .table .player.left.left1 {
+    background-position: 50px 150px;
+}
+
+.bomberman-map .table .player.left.left2 {
+    background-position: 100px 150px;
+}
+
+.bomberman-map .table .player.left.left3 {
+    background-position: 150px 150px;
+}
+
+.bomberman-map .table .player.up {
+    background-position: 0px 50px;
+}
+
+.bomberman-map .table .player.up.up1 {
+    background-position: 50px 50px;
+}
+
+.bomberman-map .table .player.up.up2 {
+    background-position: 100px 50px;
+}
+
+.bomberman-map .table .player.up.up3 {
+    background-position: 150px 50px;
+}
+
+.bomberman-map .table .player.right {
+    background-position: 50px 100px;
+}
+
+.bomberman-map .table .player.right.right1 {
+    background-position: 0px 100px;
+}
+
+.bomberman-map .table .player.right.right2 {
+    background-position: 150px 100px;
+}
+
+.bomberman-map .table .player.right.right3 {
+    background-position: 100px 100px;
+}
+
+.bomberman-map .table .bot {
+    background-image: url(../img/lepen.png);
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: 1;
+    transition: left 0.1s ease;
+}
+
+.bomberman-map .table .bot.down {
+    background-position: 0px 0px;
+}
+
+.bomberman-map .table .bot.down.down1 {
+    background-position: 50px 0px;
+}
+
+.bomberman-map .table .bot.down.down2 {
+    background-position: 100px 0px;
+}
+
+.bomberman-map .table .bot.down.down3 {
+    background-position: 150px 0px;
+}
+
+.bomberman-map .table .bot.left {
+    background-position: 0px 150px;
+}
+
+.bomberman-map .table .bot.left.left1 {
+    background-position: 50px 150px;
+}
+
+.bomberman-map .table .bot.left.left2 {
+    background-position: 100px 150px;
+}
+
+.bomberman-map .table .bot.left.left3 {
+    background-position: 150px 150px;
+}
+
+.bomberman-map .table .bot.up {
+    background-position: 0px 50px;
+}
+
+.bomberman-map .table .bot.up.up1 {
+    background-position: 50px 50px;
+}
+
+.bomberman-map .table .bot.up.up2 {
+    background-position: 100px 50px;
+}
+
+.bomberman-map .table .bot.up.up3 {
+    background-position: 150px 50px;
+}
+
+.bomberman-map .table .bot.right {
+    background-position: 50px 100px;
+}
+
+.bomberman-map .table .bot.right.right1 {
+    background-position: 0px 100px;
+}
+
+.bomberman-map .table .bot.right.right2 {
+    background-position: 150px 100px;
+}
+
+.bomberman-map .table .bot.right.right3 {
+    background-position: 100px 100px;
+}

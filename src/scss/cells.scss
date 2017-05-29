@@ -1,0 +1,31 @@
+.bomberman-map {
+    background-image: url(../img/limite_autour_map.png);
+    width: 650px;
+    margin: 0px auto;
+}
+
+.bomberman-map .table {
+    width: 550px;
+    margin: 0px 65px;
+    padding: 50px 0px;
+    position: relative;
+}
+
+.bomberman-map .table .cell {
+    height: 50px;
+    width: 50px;
+    float: left;
+    background-image: url(../img/grass3.png);
+}
+
+.bomberman-map .table .empty {
+    background-color: white;
+}
+
+.bomberman-map .table .unbreakable {
+    background-image: url(../img/tronc.png);
+}
+
+.bomberman-map .table .breakable {
+    background-image: url(../img/buisson.png);
+}
